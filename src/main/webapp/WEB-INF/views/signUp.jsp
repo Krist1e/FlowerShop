@@ -21,7 +21,7 @@
                     <input type="email" class="form-control" id="email" name="email" placeholder="<fmt:message key="signUp.enterEmail"/>" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">с</label>
+                    <label for="password"><fmt:message key="signUp.password"/></label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="<fmt:message key="signUp.enterPassword"/>" required>
                 </div>
                 <div class="form-group">

@@ -2,7 +2,7 @@
 <%@taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@taglib prefix="c" uri="jakarta.tags.core" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
-<fmt:setBundle basename="messages"/>
+<fmt:setBundle basename="text"/>
 
 <%@attribute name="product" required="true" type="by.bsuir.alekseeva.flowershop.beans.Product" %>
 <div class="col-md-4 mb-4">
@@ -16,7 +16,7 @@
                     value="${product.price * (1 - product.discount)}" maxFractionDigits="2"/></c:if><c:if
                     test="${product.discount == 0.0}">${product.price}</c:if> руб.</p>
 
-            <a href="<c:url value="/controller/add-to-cart?product=${product.id}"/>" class="btn btn-primary">Добавить в корзину</a>
+            <a href="<c:url value="/controller/add-to-cart?product=${product.id}"/>" class="btn btn-primary"><fmt:message key="productCard.addToCart"/></a>
         </div>
     </div>
 </div>
