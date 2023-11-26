@@ -19,7 +19,9 @@ public enum CommandName {
     CATALOG_PAGE("catalog-page"),
     SHOPPING_CART_PAGE("shopping-cart-page"),
     PROFILE_PAGE("profile-page"),
-    ADMIN_PAGE("admin-page");
+    ADMIN_PAGE("admin-page"),
+    BAN_USER("ban-user"),
+    UNBAN_USER("unban-user");
 
     private final String name;
 

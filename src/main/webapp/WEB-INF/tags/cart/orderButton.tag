@@ -1,4 +1,5 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="text"/>
 
@@ -16,44 +17,28 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form action="<c:url value="/controller/place-order"/>" method="post">
                     <div class="form-group">
                         <label for="address"><fmt:message key="orderButton.address"/><span class="required-field"
                                                                  style="color: red"> *</span></label>
-                        <input type="text" class="form-control" id="address" placeholder="<fmt:message key="orderButton.enterAddress"/>"
+                        <input type="text" class="form-control" id="address" name="address" placeholder="<fmt:message key="orderButton.enterAddress"/>"
                                required>
                     </div>
                     <div class="form-group">
                         <label for="phone"><fmt:message key="orderButton.telephone"/><span class="required-field" style="color: red"> *</span></label>
-                        <input type="tel" class="form-control" id="phone" placeholder="<fmt:message key="orderButton.enterTelephone"/>"
+                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="<fmt:message key="orderButton.enterTelephone"/>"
                                required>
                     </div>
                     <div class="form-group">
                         <label for="comments"><fmt:message key="orderButton.comment"/></label>
-                        <textarea class="form-control" id="comments" placeholder="<fmt:message key="orderButton.enterComment"/>"></textarea>
+                        <textarea class="form-control" id="comments" name="comments" placeholder="<fmt:message key="orderButton.enterComment"/>"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><fmt:message key="orderButton.close"/></button>
+                        <button type="submit" class="btn btn-primary"><fmt:message key="orderButton.finishOrder"/></button>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><fmt:message key="orderButton.close"/></button>
-                <button type="button" class="btn btn-primary" onclick="checkout()"><fmt:message key="orderButton.finishOrder"/></button>
             </div>
         </div>
     </div>
 </div>
-<script>
-    function checkout() {
-        let address = $('#address').val();
-        let phone = $('#phone').val();
-        let comments = $('#comments').val();
-
-        const params = new URLSearchParams();
-        params.append('address', address);
-        params.append('phone', phone);
-        params.append('comments', comments);
-
-        fetch('/controller/place-order?' + params.toString(), {
-            method: 'POST',
-        })
-    }
-</script>
