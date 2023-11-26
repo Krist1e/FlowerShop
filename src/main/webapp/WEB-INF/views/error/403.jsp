@@ -3,14 +3,14 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
-<fmt:setBundle basename="messages"/>
+<fmt:setBundle basename="text"/>
 
 <t:basepage title="403">
     <jsp:body>
         <c:if test="${sessionScope.user == null}">
             <jsp:forward page="../signIn.jsp"/>
         </c:if>
-        <%--<c:if test="${sessionScope.user != null}">
+        <c:if test="${sessionScope.user != null}">
             <div class="container mt-5 ms-5">
                 <div class="alert alert-danger" role="alert">
                     <c:if test="${sessionScope.user.role == 'BANNED_USER'}">
@@ -34,6 +34,6 @@
                     <p class="mb-0"><fmt:message key="403.contact"/></p>
                 </div>
             </div>
-        </c:if>--%>
+        </c:if>
     </jsp:body>
 </t:basepage>
