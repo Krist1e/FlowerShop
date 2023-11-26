@@ -9,15 +9,24 @@ import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 
-@RequiredArgsConstructor
 public class RedirectResult implements CommandResult {
 
     private final CommandName command;
+    private int pageNumber;
+
+    public RedirectResult(CommandName command, int pageNumber) {
+        this.command = command;
+        this.pageNumber = pageNumber;
+    }
+
+    public RedirectResult(CommandName command) {
+        this.command = command;
+    }
 
     @Override
     public void executeResult(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         try {
-            response.sendRedirect("/controller/" + command.getName());
+            response.sendRedirect("/controller/" + command.getName() + (pageNumber != 0 ? "?page=" + pageNumber : ""));
         } catch (IOException e) {
             throw new CommandException("Redirect result failed", e);
         }

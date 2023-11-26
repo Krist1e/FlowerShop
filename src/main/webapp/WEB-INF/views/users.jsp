@@ -14,7 +14,7 @@
 
             <u:users users="${requestScope.users.content}"/>
 
-            <t:pagination url="/controller/users?" page="${requestScope.users}"/>
+            <t:pagination url="/controller/users-page?" page="${requestScope.users}"/>
         </div>
     </jsp:body>
 </t:basepage>

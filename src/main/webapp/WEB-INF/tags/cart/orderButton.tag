@@ -3,9 +3,10 @@
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="text"/>
 
-<div class="text-right">
-    <button class="btn btn-primary" data-toggle="modal" data-target="#checkoutModal"><fmt:message key="orderButton.placeOrder"/></button>
-</div>
+
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkoutModal"><fmt:message
+        key="orderButton.placeOrder"/></button>
+
 <div class="modal fade" id="checkoutModal" tabindex="-1" role="dialog" aria-labelledby="checkoutModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -20,22 +21,28 @@
                 <form action="<c:url value="/controller/place-order"/>" method="post">
                     <div class="form-group">
                         <label for="address"><fmt:message key="orderButton.address"/><span class="required-field"
-                                                                 style="color: red"> *</span></label>
-                        <input type="text" class="form-control" id="address" name="address" placeholder="<fmt:message key="orderButton.enterAddress"/>"
+                                                                                           style="color: red"> *</span></label>
+                        <input type="text" class="form-control" id="address" name="address"
+                               placeholder="<fmt:message key="orderButton.enterAddress"/>"
                                required>
                     </div>
                     <div class="form-group">
-                        <label for="phone"><fmt:message key="orderButton.telephone"/><span class="required-field" style="color: red"> *</span></label>
-                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="<fmt:message key="orderButton.enterTelephone"/>"
+                        <label for="phone"><fmt:message key="orderButton.telephone"/><span class="required-field"
+                                                                                           style="color: red"> *</span></label>
+                        <input type="tel" class="form-control" id="phone" name="phone"
+                               placeholder="<fmt:message key="orderButton.enterTelephone"/>"
                                required>
                     </div>
                     <div class="form-group">
                         <label for="comments"><fmt:message key="orderButton.comment"/></label>
-                        <textarea class="form-control" id="comments" name="comments" placeholder="<fmt:message key="orderButton.enterComment"/>"></textarea>
+                        <textarea class="form-control" id="comments" name="comments"
+                                  placeholder="<fmt:message key="orderButton.enterComment"/>"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><fmt:message key="orderButton.close"/></button>
-                        <button type="submit" class="btn btn-primary"><fmt:message key="orderButton.finishOrder"/></button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><fmt:message
+                                key="orderButton.close"/></button>
+                        <button type="submit" class="btn btn-primary"><fmt:message
+                                key="orderButton.finishOrder"/></button>
                     </div>
                 </form>
             </div>

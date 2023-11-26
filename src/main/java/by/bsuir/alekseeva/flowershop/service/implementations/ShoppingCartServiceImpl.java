@@ -1,53 +1,47 @@
 package by.bsuir.alekseeva.flowershop.service.implementations;
 
+import by.bsuir.alekseeva.flowershop.beans.Coupon;
 import by.bsuir.alekseeva.flowershop.beans.Item;
 import by.bsuir.alekseeva.flowershop.beans.Product;
 import by.bsuir.alekseeva.flowershop.beans.ShoppingCart;
-import by.bsuir.alekseeva.flowershop.service.ProductService;
+import by.bsuir.alekseeva.flowershop.dao.CouponDAO;
+import by.bsuir.alekseeva.flowershop.dao.ProductDAO;
+import by.bsuir.alekseeva.flowershop.dao.ShoppingCartDAO;
+import by.bsuir.alekseeva.flowershop.exception.DAOException;
+import by.bsuir.alekseeva.flowershop.exception.ServiceException;
 import by.bsuir.alekseeva.flowershop.service.ShoppingCartService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.Optional;
 
 @Slf4j
+@RequiredArgsConstructor
 public class ShoppingCartServiceImpl implements ShoppingCartService {
-    private final ProductService productService;
-    private final Map<Integer, ShoppingCart> carts = new HashMap<>();
 
-    public ShoppingCartServiceImpl(ProductService productService) {
-        this.productService = productService;
-        List<Item> cartItems = new ArrayList<>();
-        cartItems.add(new Item(1, new Product(1, "Rose", "Red rose", "rose.jpg", 10, 0.0F), 5, 50));
-        cartItems.add(new Item(2, new Product(2, "Tulip", "Red tulip", "tulip.jpg", 5, 0.1F), 9, 45));
+    private final ProductDAO productDAO;
+    private final CouponDAO couponDAO;
+    private final ShoppingCartDAO shoppingCartDAO;
 
-        carts.put(1, ShoppingCart.builder()
-                .cartItems(cartItems)
-                .totalPrice(95)
-                .build());
+    @Override
+    public Optional<ShoppingCart> getCartByUserId(int userId) throws ServiceException {
+        try {
+            return shoppingCartDAO.getCartByUserId(userId);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public Optional<ShoppingCart> getCartByUserId(int userId) {
-        return Optional.ofNullable(carts.get(userId));
-    }
-
-    @Override
-    public Optional<Item> getItemById(int userId, int itemId) {
-        return getCartByUserId(userId).get().getCartItems().stream()
+    public Optional<Item> getItemById(int userId, int itemId) throws ServiceException {
+        ShoppingCart cart = getShoppingCart(userId);
+        return cart.getCartItems().stream()
                 .filter(i -> i.getId() == itemId)
                 .findFirst();
     }
 
     @Override
-    public void createCart(int userId) {
-        carts.put(userId, ShoppingCart.builder()
-                .cartItems(new ArrayList<>())
-                .totalPrice(0)
-                .build());
-    }
-
-    @Override
-    public void addItemToCart(int userId, int productId) {
+    public void addItemToCart(int userId, int productId) throws ServiceException {
         ShoppingCart cart = getShoppingCart(userId);
         Optional<Item> itemOptional = cart.getCartItems().stream()
                 .filter(i -> i.getProduct().getId() == productId)
@@ -55,64 +49,117 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if (itemOptional.isPresent()) {
             Item item = itemOptional.get();
             item.setQuantity(item.getQuantity() + 1);
-            item.setPrice(item.getProduct().getPrice() * item.getQuantity());
-            cart.setTotalPrice(cart.getTotalPrice() + item.getProduct().getPrice());
+            item.setPrice(item.getPrice() + item.getProduct().getDiscountedPrice());
         } else {
-            Optional<Product> product = productService.getProductById(productId);
-            if (product.isEmpty()) {
-                throw new IllegalArgumentException("Product not found");
-            }
-            Item item = Item.builder()
-                    .id(cart.getCartItems().size() + 1)
-                    .product(product.get())
-                    .quantity(1)
-                    .price(product.get().getPrice())
-                    .build();
-            cart.getCartItems().add(item);
-            cart.setTotalPrice(cart.getTotalPrice() + item.getPrice());
+            createItem(productId, cart);
         }
+        try {
+            shoppingCartDAO.update(cart);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+        log.debug("Item {} added to cart {}", productId, userId);
+    }
 
-        log.info("Item {} added to cart {}", productId, userId);
+    private void createItem(int productId, ShoppingCart cart) throws ServiceException {
+        Optional<Product> product;
+        try {
+            product = productDAO.getProductById(productId);
+        } catch (DAOException e) {
+            log.error("Error while getting product by id", e);
+            throw new ServiceException(e);
+        }
+        if (product.isEmpty()) {
+            throw new ServiceException("Product not found");
+        }
+        Item item = Item.builder()
+                .id(cart.getCartItems().size() + 1)
+                .product(product.get())
+                .quantity(1)
+                .build();
+        cart.getCartItems().add(item);
     }
 
 
     @Override
-    public void deleteItemFromCart(int userId, int itemId) {
+    public void deleteItemFromCart(int userId, int itemId) throws ServiceException {
         ShoppingCart cart = getShoppingCart(userId);
-        Item item = cart.getCartItems().stream()
-                .filter(i -> i.getId() == itemId)
-                .findFirst().get();
+        Item item = getItem(cart, itemId);
+        cart.setTotalPrice(cart.getTotalPrice() - item.getPrice());
         cart.getCartItems().remove(item);
-        cart.setTotalPrice(cart.getTotalPrice() - item.getPrice());
+        try {
+            shoppingCartDAO.update(cart);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+        log.debug("Item {} deleted from cart {}", itemId, userId);
     }
 
     @Override
-    public void updateItemQuantity(int userId, int itemId, int quantity) {
+    public void updateItemQuantity(int userId, int itemId, int quantity) throws ServiceException {
         ShoppingCart cart = getShoppingCart(userId);
-        Item item = cart.getCartItems().stream()
-                .filter(i -> i.getId() == itemId)
-                .findFirst().get();
-        cart.setTotalPrice(cart.getTotalPrice() - item.getPrice());
-        if (quantity == 0) {
-            cart.getCartItems().remove(item);
-        } else {
-            item.setQuantity(quantity);
-            item.setPrice(item.getProduct().getPrice() * item.getQuantity());
-            cart.setTotalPrice(cart.getTotalPrice() + item.getPrice());
+        Item item = getItem(cart, itemId);
+        item.setQuantity(quantity);
+        float price = item.getProduct().getDiscountedPrice() * quantity;
+        cart.setTotalPrice(cart.getTotalPrice() - item.getPrice() + price);
+        item.setPrice(price);
+        try {
+            shoppingCartDAO.update(cart);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
         }
     }
 
     @Override
-    public void clearCart(int userId) {
+    public void clearCart(int userId) throws ServiceException {
         ShoppingCart cart = getShoppingCart(userId);
         cart.getCartItems().clear();
         cart.setTotalPrice(0);
+        cart.setCoupon(null);
+        try {
+            shoppingCartDAO.update(cart);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+        log.info("Cart {} cleared", userId);
     }
 
-    private ShoppingCart getShoppingCart(int userId) {
+    @Override
+    public void applyCoupon(int userId, int couponId) throws ServiceException {
+        ShoppingCart cart = getShoppingCart(userId);
+        Optional<Coupon> couponOptional;
+        try {
+            couponOptional = couponDAO.getCouponById(couponId);
+        } catch (DAOException e) {
+            log.error("Error while getting coupon by id", e);
+            throw new ServiceException(e);
+        }
+        if (couponOptional.isEmpty()) {
+            throw new ServiceException("Coupon not found");
+        }
+        Coupon coupon = couponOptional.get();
+        cart.setCoupon(coupon);
+        try {
+            shoppingCartDAO.update(cart);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    private Item getItem(ShoppingCart cart, int itemId) throws ServiceException {
+        Optional<Item> itemOptional = cart.getCartItems().stream()
+                .filter(i -> i.getId() == itemId)
+                .findFirst();
+        if (itemOptional.isEmpty()) {
+            throw new ServiceException("Item not found");
+        }
+        return itemOptional.get();
+    }
+
+    private ShoppingCart getShoppingCart(int userId) throws ServiceException {
         Optional<ShoppingCart> cartOptional = getCartByUserId(userId);
         if (cartOptional.isEmpty()) {
-            throw new IllegalArgumentException("Cart not found");
+            throw new ServiceException("Cart not found");
         }
         return cartOptional.get();
     }

@@ -22,5 +22,10 @@ public class Order {
     private String address;
     private String phone;
     private String comments;
+    private Coupon coupon;
+
+    public float getDiscountedPrice() {
+        return totalPrice * (1 - coupon.getDiscount());
+    }
 }
 

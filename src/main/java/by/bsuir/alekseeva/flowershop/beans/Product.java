@@ -16,4 +16,8 @@ public class Product {
     private String imagePath;
     private float price;
     private float discount;
+
+    public float getDiscountedPrice() {
+        return price * (1 - discount);
+    }
 }

@@ -8,12 +8,12 @@
 
 <%@attribute name="product" required="true" type="by.bsuir.alekseeva.flowershop.beans.Product" %>
 <c:if test="${sessionScope.user != null && sessionScope.user.role == 'ADMIN'}">
-    <a class="btn btn-danger" data-toggle="modal" data-target="#deleteProductModal"><i class="bi bi-trash"></i></a>
-    <div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+    <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProductModal${product.id}"><i class="bi bi-trash"></i></a>
+    <div class="modal fade" id="deleteProductModal${product.id}" tabindex="-1" role="dialog" aria-labelledby="deleteProductModalLabel${product.id}" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Удаление товара</h5>
+                    <h5 class="modal-title" id="exampleModalLabel${product.id}">Удаление товара</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

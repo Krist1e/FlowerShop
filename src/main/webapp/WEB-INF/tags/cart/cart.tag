@@ -17,14 +17,19 @@
     </thead>
     <tbody>
     <c:forEach items="${cart.cartItems}" var="item">
-        <cart:cartItem item="${item}"/>
+        <cart:cartItem item="${item}" coupon="${cart.coupon}"/>
     </c:forEach>
     </tbody>
     <c:if test="${cart.cartItems.size() > 0}">
         <tfoot>
         <tr>
             <td colspan="3" class="text-right"><fmt:message key="cart.totalPrice"/></td>
-            <td>${cart.totalPrice}</td>
+            <c:if test="${cart.coupon != null}">
+                <td><s>${cart.totalPrice}</s> <fmt:formatNumber value="${cart.discountedPrice}" type="currency"/></td>
+            </c:if>
+            <c:if test="${cart.coupon == null}">
+                <td><fmt:formatNumber value="${cart.totalPrice}" type="currency"/></td>
+            </c:if>
         </tr>
         </tfoot>
     </c:if>
@@ -38,5 +43,8 @@
 </table>
 
 <c:if test="${cart.cartItems.size() > 0}">
-    <cart:orderButton/>
+    <div class="d-flex justify-content-between">
+        <cart:orderButton/>
+        <cart:couponField cart="${cart}"/>
+    </div>
 </c:if>

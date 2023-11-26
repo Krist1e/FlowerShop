@@ -15,7 +15,7 @@
             <p><fmt:message key="order.orderDate"/> <t:date date="${order.date}"/></p>
         </div>
         <div class="col-2">
-            <p><fmt:message key="order.totalPrice"/> ${order.totalPrice}</p>
+            <p><fmt:message key="order.totalPrice"/> <fmt:formatNumber value="${order.discountedPrice}" type="currency"/></p>
         </div>
         <div class="col-2">
             <p><fmt:message key="order.orderStatus"/> <c:choose>
@@ -35,6 +35,12 @@
         <div class="col-12">
             <p><fmt:message key="order.orderAddress"/> ${order.address}</p>
         </div>
+        <c:if test="${order.coupon != null}">
+            <div class="col-12">
+                <p><fmt:message key="order.coupon"/> ${order.coupon.code}</p>
+                <p><fmt:message key="order.coupon.discount"/> ${order.coupon.discount}</p>
+            </div>
+        </c:if>
     </div>
     <div class="row">
         <div class="col-12">
@@ -55,7 +61,7 @@
                 <c:forEach items="${order.orderItems}" var="orderItem">
                     <tr>
                         <td>${orderItem.product.name}</td>
-                        <td>${orderItem.product.price}</td>
+                        <td><fmt:formatNumber value="${orderItem.product.discountedPrice}" type="currency"/></td>
                         <td>${orderItem.quantity}</td>
                     </tr>
                 </c:forEach>

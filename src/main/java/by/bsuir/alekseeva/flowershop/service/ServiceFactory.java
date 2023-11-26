@@ -1,5 +1,6 @@
 package by.bsuir.alekseeva.flowershop.service;
 
+import by.bsuir.alekseeva.flowershop.dao.DAOFactory;
 import by.bsuir.alekseeva.flowershop.service.implementations.*;
 import lombok.Getter;
 
@@ -10,12 +11,15 @@ public class ServiceFactory {
     private final OrderService orderService;
     private final AuthenticationService authenticationService;
     private final ShoppingCartService cartService;
+    private final CouponService couponService;
 
     private ServiceFactory() {
-        productService = new ProductServiceImpl();
-        cartService = new ShoppingCartServiceImpl(productService);
-        userService = new UserServiceImpl(cartService);
-        orderService = new OrderServiceImpl(userService);
+        DAOFactory daoFactory = DAOFactory.getInstance();
+        couponService = new CouponServiceImpl(daoFactory.getCouponDAO());
+        productService = new ProductServiceImpl(daoFactory.getProductDAO());
+        cartService = new ShoppingCartServiceImpl(daoFactory.getProductDAO(), daoFactory.getCouponDAO(), daoFactory.getShoppingCartDAO());
+        userService = new UserServiceImpl(daoFactory.getShoppingCartDAO(), daoFactory.getUserDAO());
+        orderService = new OrderServiceImpl(daoFactory.getUserDAO(), daoFactory.getOrderDAO());
         authenticationService = new AuthenticationServiceImpl(userService);
     }
 

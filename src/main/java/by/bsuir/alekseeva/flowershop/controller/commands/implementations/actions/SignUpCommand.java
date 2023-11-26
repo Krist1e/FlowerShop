@@ -9,11 +9,13 @@ import by.bsuir.alekseeva.flowershop.exception.CommandException;
 import by.bsuir.alekseeva.flowershop.service.AuthenticationService;
 import by.bsuir.alekseeva.flowershop.service.ServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
 public class SignUpCommand implements Command {
-    private final AuthenticationService authenticationService = ServiceFactory.getInstance().getAuthenticationService();
+    private final AuthenticationService authenticationService;
 
     @Override
     public CommandResult execute(HttpServletRequest request) throws CommandException {

@@ -10,8 +10,6 @@ import java.util.Map;
 import static by.bsuir.alekseeva.flowershop.controller.commands.CommandName.*;
 
 public class SecurityConfig {
-    // TODO add commands
-
     private final static List<Role> allRoles = List.of(Role.values());
 
     private final static Map<CommandName, List<Role>> commandRoles = new HashMap<>();
@@ -38,6 +36,7 @@ public class SecurityConfig {
         commandRoles.put(UPDATE_PRODUCT, List.of(Role.ADMIN));
         commandRoles.put(ADD_COUPON, List.of(Role.ADMIN));
         commandRoles.put(DELETE_COUPON, List.of(Role.ADMIN));
+        commandRoles.put(APPLY_COUPON, List.of(Role.USER, Role.ADMIN));
     }
 
     public static List<Role> getCommandRoles(CommandName commandName) {

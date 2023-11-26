@@ -25,7 +25,7 @@
 
                     <c:if test="${not empty requestScope.error}">
                         <div id="error-message" class="alert alert-danger">
-                            <p class="text-danger">${requestScope.error}</p>
+                            <p class="text-danger"><fmt:message key="auth.${requestScope.error}"/></p>
                         </div>
                     </c:if>
 

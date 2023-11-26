@@ -12,7 +12,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShoppingCart {
+    private User user;
     private List<Item> cartItems;
+    private Coupon coupon;
     private float totalPrice;
+
+    public float getDiscountedPrice() {
+        return totalPrice * (1 - coupon.getDiscount());
+    }
 }
 

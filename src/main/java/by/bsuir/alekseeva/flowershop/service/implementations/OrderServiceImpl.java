@@ -1,69 +1,106 @@
 package by.bsuir.alekseeva.flowershop.service.implementations;
 
 import by.bsuir.alekseeva.flowershop.beans.*;
+import by.bsuir.alekseeva.flowershop.dao.OrderDAO;
+import by.bsuir.alekseeva.flowershop.dao.UserDAO;
+import by.bsuir.alekseeva.flowershop.exception.DAOException;
+import by.bsuir.alekseeva.flowershop.exception.ServiceException;
 import by.bsuir.alekseeva.flowershop.service.OrderService;
 import by.bsuir.alekseeva.flowershop.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
-    private final UserService userService;
-    private final List<Order> orders = new ArrayList<>();
+
+    private final UserDAO userDAO;
+    private final OrderDAO orderDAO;
 
     @Override
-    public void createOrder(int userId, List<Item> items, String address, String phone, String comments) {
-        Order order = new Order();
-        order.setId(orders.size() + 1);
-        order.setUser(userService.getUserById(userId).get());
-        order.setOrderItems(new ArrayList<>(items));
-        order.setTotalPrice(items.stream().map(Item::getPrice).reduce(0.0F, Float::sum));
-        order.setStatus(OrderStatus.PAID);
-        order.setDate(LocalDateTime.now());
-        order.setAddress(address);
-        order.setPhone(phone);
-        order.setComments(comments);
-        orders.add(order);
+    public void placeOrder(int userId, String address, String phone, String comments, ShoppingCart cart) throws ServiceException {
+        Optional<User> user;
+        try {
+            user = userDAO.getUserById(userId);
+        } catch (DAOException e) {
+            log.error("Error while getting user by id", e);
+            throw new ServiceException(e);
+        }
+        if (user.isEmpty()) {
+            throw new ServiceException("User not found");
+        }
+
+        Order order = Order.builder()
+                .user(user.get())
+                .address(address)
+                .phone(phone)
+                .comments(comments)
+                .status(OrderStatus.PAID)
+                .date(LocalDateTime.now())
+                .orderItems(cart.getCartItems())
+                .totalPrice(cart.getTotalPrice())
+                .build();
+
+        try {
+            orderDAO.save(order);
+        } catch (DAOException e) {
+            log.error("Error while creating order", e);
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public Optional<Order> getOrderById(int id) {
-        return Optional.ofNullable(orders.get(id));
+    public Optional<Order> getOrderById(int id) throws ServiceException {
+        try {
+            return orderDAO.getOrderById(id);
+        } catch (DAOException e) {
+            log.error("Error while getting order by id", e);
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public List<Order> getOrders() {
-        return orders;
+    public List<Order> getOrders() throws ServiceException {
+        try {
+            return orderDAO.getOrders();
+        } catch (DAOException e) {
+            log.error("Error while getting orders", e);
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public Page<Order> getOrders(int pageNumber, int pageSize) {
-        return orders.stream().collect(Page.toPage(pageNumber, pageSize));
+    public Page<Order> getOrders(int pageNumber, int pageSize) throws ServiceException {
+        try {
+            return orderDAO.getOrders(pageNumber, pageSize);
+        } catch (DAOException e) {
+            log.error("Error while getting orders", e);
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public List<Order> getOrdersByUserId(int userId) {
-        return orders.stream()
-                .filter(order -> order.getUser().getId() == userId)
-                .toList();
+    public List<Order> getOrdersByUserId(int userId) throws ServiceException {
+        try {
+            return orderDAO.getOrdersByUserId(userId);
+        } catch (DAOException e) {
+            log.error("Error while getting orders by user id", e);
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public Page<Order> getOrdersByUserId(int userId, int pageNumber, int pageSize) {
-        return getOrdersByUserId(userId).stream().collect(Page.toPage(pageNumber, pageSize));
-    }
-
-    @Override
-    public void deleteOrder(int id) {
-        orders.removeIf(order -> order.getId() == id);
-    }
-
-    @Override
-    public void changeOrderStatus(int id, OrderStatus status) {
-        getOrderById(id).get().setStatus(status);
+    public Page<Order> getOrdersByUserId(int userId, int pageNumber, int pageSize) throws ServiceException {
+        try {
+            return orderDAO.getOrdersByUserId(userId, pageNumber, pageSize);
+        } catch (DAOException e) {
+            log.error("Error while getting orders by user id", e);
+            throw new ServiceException(e);
+        }
     }
 }

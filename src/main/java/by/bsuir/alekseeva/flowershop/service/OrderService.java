@@ -1,20 +1,16 @@
 package by.bsuir.alekseeva.flowershop.service;
 
-import by.bsuir.alekseeva.flowershop.beans.Item;
-import by.bsuir.alekseeva.flowershop.beans.Order;
-import by.bsuir.alekseeva.flowershop.beans.OrderStatus;
-import by.bsuir.alekseeva.flowershop.beans.Page;
+import by.bsuir.alekseeva.flowershop.beans.*;
+import by.bsuir.alekseeva.flowershop.exception.ServiceException;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface OrderService {
-    void createOrder(int userId, List<Item> items, String address, String phone, String comments);
-    Optional<Order> getOrderById(int id);
-    List<Order> getOrders();
-    Page<Order> getOrders(int pageNumber, int pageSize);
-    List<Order> getOrdersByUserId(int userId);
-    Page<Order> getOrdersByUserId(int userId, int pageNumber, int pageSize);
-    void deleteOrder(int id);
-    void changeOrderStatus(int id, OrderStatus status);
+    void placeOrder(int userId, String address, String phone, String comments, ShoppingCart cart) throws ServiceException;
+    Optional<Order> getOrderById(int id) throws ServiceException;
+    List<Order> getOrders() throws ServiceException;
+    Page<Order> getOrders(int pageNumber, int pageSize) throws ServiceException;
+    List<Order> getOrdersByUserId(int userId) throws ServiceException;
+    Page<Order> getOrdersByUserId(int userId, int pageNumber, int pageSize) throws ServiceException;
 }

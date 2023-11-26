@@ -2,9 +2,11 @@ package by.bsuir.alekseeva.flowershop.tests;
 
 import by.bsuir.alekseeva.flowershop.beans.Role;
 import by.bsuir.alekseeva.flowershop.beans.User;
+import by.bsuir.alekseeva.flowershop.service.CouponService;
 import by.bsuir.alekseeva.flowershop.service.ProductService;
 import by.bsuir.alekseeva.flowershop.service.ShoppingCartService;
 import by.bsuir.alekseeva.flowershop.service.UserService;
+import by.bsuir.alekseeva.flowershop.service.implementations.CouponServiceImpl;
 import by.bsuir.alekseeva.flowershop.service.implementations.ProductServiceImpl;
 import by.bsuir.alekseeva.flowershop.service.implementations.ShoppingCartServiceImpl;
 import by.bsuir.alekseeva.flowershop.service.implementations.UserServiceImpl;
@@ -20,8 +22,9 @@ class UserServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        CouponService couponService = new CouponServiceImpl();
         ProductService productService = new ProductServiceImpl();
-        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(productService);
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(productService, couponService);
         userService = new UserServiceImpl(shoppingCartService);
     }
 

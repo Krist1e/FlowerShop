@@ -2,8 +2,10 @@ package by.bsuir.alekseeva.flowershop.tests;
 
 import by.bsuir.alekseeva.flowershop.beans.Item;
 import by.bsuir.alekseeva.flowershop.beans.ShoppingCart;
+import by.bsuir.alekseeva.flowershop.service.CouponService;
 import by.bsuir.alekseeva.flowershop.service.ProductService;
 import by.bsuir.alekseeva.flowershop.service.ShoppingCartService;
+import by.bsuir.alekseeva.flowershop.service.implementations.CouponServiceImpl;
 import by.bsuir.alekseeva.flowershop.service.implementations.ProductServiceImpl;
 import by.bsuir.alekseeva.flowershop.service.implementations.ShoppingCartServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,8 +21,9 @@ class ShoppingCartServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        CouponService couponService = new CouponServiceImpl();
         ProductService productService = new ProductServiceImpl();
-        cartService = new ShoppingCartServiceImpl(productService);
+        cartService = new ShoppingCartServiceImpl(productService, couponService);
     }
 
     @Test

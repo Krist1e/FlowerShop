@@ -8,13 +8,13 @@
 
 <%@attribute name="product" required="true" type="by.bsuir.alekseeva.flowershop.beans.Product" %>
 <c:if test="${sessionScope.user != null && sessionScope.user.role == 'ADMIN'}">
-    <a class="btn btn-primary" data-toggle="modal" data-target="#editProductModal"><i class="bi bi-pencil"></i></a>
-    <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel"
+    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProductModal${product.id}"><i class="bi bi-pencil"></i></a>
+    <div class="modal fade" id="editProductModal${product.id}" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel${product.id}"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editProductModalLabel">Изменение товара</h5>
+                    <h5 class="modal-title" id="editProductModalLabel${product.id}">Изменение товара</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -48,7 +48,7 @@
                             <label for="discount">Скидка</label>
                             <input type="number" class="form-control" id="discount" name="discount"
                                    placeholder="Введите скидку"
-                                   value="${product.discount}">
+                                   value="${product.discount}" pattern="^0(\.\d+)?$|^1$" step="0.01">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>

@@ -27,7 +27,8 @@ public enum CommandName {
     DELETE_PRODUCT("delete-product"),
     UPDATE_PRODUCT("update-product"),
     ADD_COUPON("add-coupon"),
-    DELETE_COUPON("delete-coupon");
+    DELETE_COUPON("delete-coupon"),
+    APPLY_COUPON("apply-coupon");
 
     private final String name;
 

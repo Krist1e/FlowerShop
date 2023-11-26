@@ -7,19 +7,22 @@ import by.bsuir.alekseeva.flowershop.controller.commands.CommandResult;
 import by.bsuir.alekseeva.flowershop.controller.commands.implementations.results.RedirectResult;
 import by.bsuir.alekseeva.flowershop.controller.commands.implementations.results.ViewResult;
 import by.bsuir.alekseeva.flowershop.exception.CommandException;
+import by.bsuir.alekseeva.flowershop.exception.ServiceException;
 import by.bsuir.alekseeva.flowershop.service.AuthenticationService;
 import by.bsuir.alekseeva.flowershop.service.ServiceFactory;
 import by.bsuir.alekseeva.flowershop.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
 @Slf4j
+@RequiredArgsConstructor
 public class SignInCommand implements Command {
 
-    private final AuthenticationService authenticationService = ServiceFactory.getInstance().getAuthenticationService();
-    private final UserService userService = ServiceFactory.getInstance().getUserService();
+    private final AuthenticationService authenticationService;
+    private final UserService userService;
 
     @Override
     public CommandResult execute(HttpServletRequest request) throws CommandException {
@@ -29,7 +32,13 @@ public class SignInCommand implements Command {
         AuthenticationService.AuthenticationResult result = authenticationService.authenticate(username, password);
         log.info("Authentication result: {}", result);
         if (result.isSuccess()) {
-            Optional<User> user = userService.getUserByUsername(username);
+            Optional<User> user;
+            try {
+                user = userService.getUserByUsername(username);
+            } catch (ServiceException e) {
+                log.error("Failed to get user", e);
+                throw new CommandException("Failed to get user", e);
+            }
             if (user.isEmpty()) {
                 throw new CommandException("No such user");
             }

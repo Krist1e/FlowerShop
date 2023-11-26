@@ -6,16 +6,21 @@ import by.bsuir.alekseeva.flowershop.controller.commands.CommandName;
 import by.bsuir.alekseeva.flowershop.controller.commands.CommandResult;
 import by.bsuir.alekseeva.flowershop.controller.commands.implementations.results.RedirectResult;
 import by.bsuir.alekseeva.flowershop.exception.CommandException;
+import by.bsuir.alekseeva.flowershop.exception.ServiceException;
 import by.bsuir.alekseeva.flowershop.service.ServiceFactory;
 import by.bsuir.alekseeva.flowershop.service.ShoppingCartService;
 import by.bsuir.alekseeva.flowershop.utils.RequestUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
+@Slf4j
+@RequiredArgsConstructor
 public class UpdateQuantityCommand implements Command {
 
-    private final ShoppingCartService shoppingCartService = ServiceFactory.getInstance().getCartService();
+    private final ShoppingCartService shoppingCartService;
 
     @Override
     public CommandResult execute(HttpServletRequest request) throws CommandException {
@@ -23,7 +28,12 @@ public class UpdateQuantityCommand implements Command {
         int itemId = getItemId(request);
         int quantity = getQuantity(request, userId, itemId);
 
-        shoppingCartService.updateItemQuantity(userId, itemId, quantity);
+        try {
+            shoppingCartService.updateItemQuantity(userId, itemId, quantity);
+        } catch (ServiceException e) {
+            log.error("Failed to update quantity", e);
+            throw new CommandException("Failed to update quantity", e);
+        }
 
         return new RedirectResult(CommandName.SHOPPING_CART_PAGE);
     }
@@ -43,7 +53,13 @@ public class UpdateQuantityCommand implements Command {
     private int getChangedQuantity(HttpServletRequest request, int userId, int itemId) throws CommandException {
         int changed = getChanged(request);
 
-        Optional<Item> itemOptional = shoppingCartService.getItemById(userId, itemId);
+        Optional<Item> itemOptional;
+        try {
+            itemOptional = shoppingCartService.getItemById(userId, itemId);
+        } catch (ServiceException e) {
+            log.error("Failed to get item", e);
+            throw new CommandException("Failed to get item", e);
+        }
         if (itemOptional.isEmpty()) {
             throw new CommandException("No such item");
         }
