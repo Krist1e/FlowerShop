@@ -14,12 +14,12 @@
                 <form action="<c:url value="/controller/sign-in"/>" method="post">
                     <div class="form-group">
                         <label for="username"><fmt:message key="signIn.login"/></label>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Введите ваш логин" <c:if test="${not empty requestScope.error}">value="${requestScope.username}"</c:if>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="<fmt:message key="signIn.enterLogin"/> <c:if test="${not empty requestScope.error}">value="${requestScope.username}"</c:if>
                                required autofocus="autofocus">
                     </div>
                     <div class="form-group">
                         <label for="password"><fmt:message key="signIn.password"/></label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Введите ваш пароль"
+                        <input type="password" class="form-control" id="password" name="password" placeholder="<fmt:message key="signIn.enterPassword"/>"
                                required>
                     </div>
 

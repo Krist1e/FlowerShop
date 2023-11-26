@@ -2,7 +2,7 @@
 <%@taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@taglib prefix="c" uri="jakarta.tags.core" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
-<fmt:setBundle basename="messages"/>
+<fmt:setBundle basename="text"/>
 
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">

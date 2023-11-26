@@ -10,7 +10,7 @@
 <t:basepage title="Catalog">
     <jsp:body>
         <div class="container mt-4">
-            <h2>Профиль пользователя</h2>
+            <h2><fmt:message key="profile.title"/></h2>
 
             <profile:userCard user="${requestScope.user}"/>
 

@@ -15,10 +15,20 @@
             <p><fmt:message key="order.orderDate"/> <t:date date="${order.date}"/></p>
         </div>
         <div class="col-2">
-            <p><fmt:message key="order.orderPrice"/> ${order.totalPrice}</p>
+            <p><fmt:message key="order.totalPrice"/> ${order.totalPrice}</p>
         </div>
         <div class="col-2">
-            <p><fmt:message key="order.orderStatus"/> ${order.status}</p>
+            <p><fmt:message key="order.orderStatus"/> <c:choose>
+                <c:when test="${order.status == 'PAID'}">
+                    <fmt:message key="order.status.paid"/>
+                </c:when>
+                <c:when test="${order.status == 'DELIVERED'}">
+                    <fmt:message key="order.status.delivered"/>
+                </c:when>
+                <c:when test="${order.status == 'CANCELED'}">
+                    <fmt:message key="order.status.canceled"/>
+                </c:when>
+            </c:choose></p>
         </div>
     </div>
     <div class="row">
