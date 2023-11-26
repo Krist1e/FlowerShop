@@ -13,11 +13,11 @@
         <%--<c:if test="${sessionScope.user != null}">
             <div class="container mt-5 ms-5">
                 <div class="alert alert-danger" role="alert">
-                    <c:if test="${sessionScope.user.role == 'BANNED'}">
+                    <c:if test="${sessionScope.user.role == 'BANNED_USER'}">
                         <h4 class="alert-heading"><fmt:message key="403.banned"/></h4>
                         <p><fmt:message key="403.sorry"/></p>
                     </c:if>
-                    <c:if test="${sessionScope.user.role != 'BANNED'}">
+                    <c:if test="${sessionScope.user.role != 'BANNED_USER'}">
                         <h4 class="alert-heading"><fmt:message key="403.title"/></h4>
                         <p><c:choose>
                             <c:when test="${sessionScope.user.role == 'ADMIN'}">

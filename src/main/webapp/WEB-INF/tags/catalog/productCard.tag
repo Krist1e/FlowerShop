@@ -1,6 +1,8 @@
 <%@tag description="Product Card" pageEncoding="UTF-8" %>
-<%@taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@taglib prefix="c" uri="jakarta.tags.core" %>
+<%@taglib prefix="catalog" tagdir="/WEB-INF/tags/catalog" %>
+
+<%@taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="text"/>
 
@@ -15,8 +17,13 @@
                     class="text-muted"><s>${product.price}</s></span> <fmt:formatNumber
                     value="${product.price * (1 - product.discount)}" maxFractionDigits="2"/></c:if><c:if
                     test="${product.discount == 0.0}">${product.price}</c:if> руб.</p>
-
-            <a href="<c:url value="/controller/add-to-cart?product=${product.id}"/>" class="btn btn-primary"><fmt:message key="productCard.addToCart"/></a>
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="<c:url value="/controller/add-to-cart?product=${product.id}"/>" class="btn btn-primary"><fmt:message key="productCard.addToCart"/></a>
+                <div class="btn-group">
+                    <catalog:editButton product="${product}"/>
+                    <catalog:deleteButton product="${product}"/>
+                </div>
+            </div>
         </div>
     </div>
 </div>

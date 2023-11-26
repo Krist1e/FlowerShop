@@ -32,12 +32,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProducts() {
+    public List<Product> getInStockProducts() {
         return products;
     }
 
     @Override
-    public Page<Product> getProducts(int pageNumber, int pageSize) {
+    public Page<Product> getInStockProducts(int pageNumber, int pageSize) {
         return products.stream().collect(Page.toPage(pageNumber, pageSize));
     }
 
