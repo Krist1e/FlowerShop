@@ -20,7 +20,7 @@ public class Order {
     private OrderStatus status;
     private LocalDateTime date;
     private String address;
-    private String phoneNumber;
-    private String comment;
+    private String phone;
+    private String comments;
 }
 

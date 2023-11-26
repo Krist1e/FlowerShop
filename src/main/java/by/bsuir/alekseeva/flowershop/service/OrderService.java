@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderService {
-    void createOrder(int userId, List<Item> items, String address);
+    void createOrder(int userId, List<Item> items, String address, String phone, String comments);
     Optional<Order> getOrderById(int id);
     List<Order> getOrders();
     Page<Order> getOrders(int pageNumber, int pageSize);

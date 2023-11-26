@@ -32,15 +32,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void createOrder(int userId, List<Item> items, String address) {
+    public void createOrder(int userId, List<Item> items, String address, String phone, String comments) {
         Order order = new Order();
         order.setId(orders.size() + 1);
         order.setUser(userService.getUserById(userId).get());
-        order.setOrderItems(items);
+        order.setOrderItems(new ArrayList<>(items));
         order.setTotalPrice(items.stream().map(Item::getPrice).reduce(0.0F, Float::sum));
         order.setStatus(OrderStatus.PAID);
         order.setDate(LocalDateTime.now());
         order.setAddress(address);
+        order.setPhone(phone);
+        order.setComments(comments);
         orders.add(order);
     }
 
