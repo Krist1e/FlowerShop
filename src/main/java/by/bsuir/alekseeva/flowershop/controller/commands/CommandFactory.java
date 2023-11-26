@@ -23,7 +23,7 @@ public class CommandFactory {
         commands.put(CommandName.SIGN_UP_PAGE, new SignUpPageCommand());
         commands.put(CommandName.CATALOG_PAGE, new CatalogPageCommand());
         commands.put(CommandName.SHOPPING_CART_PAGE, new ShoppingCartPageCommand());
-        commands.put(CommandName.ORDER_PAGE, new OrderPageCommand());
+        commands.put(CommandName.PROFILE_PAGE, new ProfilePageCommand());
     }
 
     public Command getCommand(HttpServletRequest request) {

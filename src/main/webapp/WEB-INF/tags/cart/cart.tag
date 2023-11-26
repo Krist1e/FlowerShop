@@ -28,6 +28,13 @@
         </tr>
         </tfoot>
     </c:if>
+    <c:if test="${cart.cartItems.size() == 0}">
+        <tfoot>
+        <tr>
+            <td colspan="4" class="text-center">Корзина пуста</td>
+        </tr>
+        </tfoot>
+    </c:if>
 </table>
 
 <c:if test="${cart.cartItems.size() > 0}">

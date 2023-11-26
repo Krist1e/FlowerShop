@@ -25,11 +25,10 @@ public class SecurityConfig {
         commandRoles.put(CATALOG_PAGE, allRoles);
         commandRoles.put(CHANGE_LOCALE, allRoles);
         commandRoles.put(ADD_TO_CART, List.of(Role.USER, Role.ADMIN));
-        commandRoles.put(REMOVE_FROM_CART, List.of(Role.USER, Role.ADMIN));
         commandRoles.put(UPDATE_QUANTITY, List.of(Role.USER, Role.ADMIN));
         commandRoles.put(PLACE_ORDER, List.of(Role.USER, Role.ADMIN));
         commandRoles.put(SHOPPING_CART_PAGE, List.of(Role.USER, Role.ADMIN));
-        commandRoles.put(ORDER_PAGE, List.of(Role.USER, Role.ADMIN));
+        commandRoles.put(PROFILE_PAGE, List.of(Role.USER, Role.ADMIN));
         commandRoles.put(ADMIN_PAGE, List.of(Role.ADMIN));
     }
 

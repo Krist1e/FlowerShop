@@ -18,7 +18,7 @@ public enum CommandName {
     SIGN_IN_PAGE("sign-in-page"),
     CATALOG_PAGE("catalog-page"),
     SHOPPING_CART_PAGE("shopping-cart-page"),
-    ORDER_PAGE("order-page"),
+    PROFILE_PAGE("profile-page"),
     ADMIN_PAGE("admin-page");
 
     private final String name;
