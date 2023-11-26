@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Data
@@ -20,5 +20,7 @@ public class Order {
     private OrderStatus status;
     private LocalDateTime date;
     private String address;
+    private String phoneNumber;
+    private String comment;
 }
 

@@ -1,5 +1,6 @@
 package by.bsuir.alekseeva.flowershop.service.implementations;
 
+import by.bsuir.alekseeva.flowershop.beans.Page;
 import by.bsuir.alekseeva.flowershop.beans.Role;
 import by.bsuir.alekseeva.flowershop.beans.User;
 import by.bsuir.alekseeva.flowershop.service.UserService;
@@ -48,12 +49,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Page<User> getUsers(int pageNumber, int pageSize) {
+        return users.stream().collect(Page.toPage(pageNumber, pageSize));
+    }
+
+    @Override
     public void addUser(String username, String password, String email) {
         users.add(User.builder()
                 .id(users.size() + 1)
                 .username(username)
                 .password(password)
                 .email(email)
+                .role(Role.USER)
                 .build());
     }
 

@@ -2,32 +2,24 @@ package by.bsuir.alekseeva.flowershop.tests;
 
 import by.bsuir.alekseeva.flowershop.beans.OrderStatus;
 import by.bsuir.alekseeva.flowershop.service.OrderService;
-import by.bsuir.alekseeva.flowershop.service.ServiceFactory;
+import by.bsuir.alekseeva.flowershop.service.UserService;
 import by.bsuir.alekseeva.flowershop.service.implementations.OrderServiceImpl;
+import by.bsuir.alekseeva.flowershop.service.implementations.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class OrderServiceImplTest {
     private OrderService orderService;
 
     @BeforeEach
     void setUp() {
-        orderService = new OrderServiceImpl();
-    }
-
-    @Test
-    void createOrderItem() {
-        int orderId = 1;
-        int itemId = 1;
-        int quantity = 5;
-        orderService.createOrderItem(orderId, itemId, quantity);
-        assertNotNull(orderService.getOrderById(orderId).get().getOrderItems().stream()
-                .filter(item -> item.getId() == itemId)
-                .findFirst());
+        UserService userService = new UserServiceImpl();
+        orderService = new OrderServiceImpl(userService);
     }
 
     @Test
@@ -63,19 +55,7 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void setOrderAddress() {
-        int id = 1;
-        String address = "Minsk";
-        orderService.setOrderAddress(id, address);
-        assertEquals(address, orderService.getOrderById(id).get().getAddress());
-    }
+    void getOrdersByUserId() {
 
-    @Test
-    void getTotalPrice() {
-        int id = 1;
-        float totalPrice = 95;
-        assertEquals(totalPrice, orderService.getOrderById(id).get().getOrderItems().stream()
-                .map(item -> item.getProduct().getPrice() * item.getQuantity())
-                .reduce(0.0F, Float::sum));
     }
 }

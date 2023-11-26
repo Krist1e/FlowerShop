@@ -1,15 +1,14 @@
 package by.bsuir.alekseeva.flowershop.tests;
 
 import by.bsuir.alekseeva.flowershop.service.ProductService;
-import by.bsuir.alekseeva.flowershop.service.ServiceFactory;
-import by.bsuir.alekseeva.flowershop.service.implementations.OrderServiceImpl;
 import by.bsuir.alekseeva.flowershop.service.implementations.ProductServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ProductServiceImplTest {
     private ProductService productService;
@@ -17,6 +16,11 @@ class ProductServiceImplTest {
     @BeforeEach
     void setUp() {
         productService = new ProductServiceImpl();
+        productService.addProduct("Rose", "test", 10, 0.1F, "test");
+        productService.addProduct("Tulip", "test", 5, 0.1F, "test");
+        productService.addProduct("Lily", "test", 15, 0.1F, "test");
+        productService.addProduct("Daisy", "test", 20, 0.1F, "test");
+        productService.addProduct("Orchid", "test", 25, 0.1F, "test");
     }
 
     @Test
@@ -67,5 +71,13 @@ class ProductServiceImplTest {
         assertEquals(price, productService.getProductById(id).get().getPrice());
         assertEquals(discount, productService.getProductById(id).get().getDiscount());
         assertEquals(imagePath, productService.getProductById(id).get().getImagePath());
+    }
+
+    @Test
+    void getProductsByPage() {
+        int pageNumber = 1;
+        int pageSize = 2;
+        assertNotNull(productService.getProducts(pageNumber, pageSize));
+        assertEquals(pageSize, productService.getProducts(pageNumber, pageSize).getContent().size());
     }
 }

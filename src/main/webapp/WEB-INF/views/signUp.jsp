@@ -13,7 +13,7 @@
 </head>
 <body>
 <h1>Sign Up</h1>
-<form action="${pageContext.request.contextPath}/sign-up" method="post">
+<form action="${pageContext.request.contextPath}/controller/sign-up" method="post">
     <table>
         <tr>
             <td>Username</td>

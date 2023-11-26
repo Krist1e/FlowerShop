@@ -2,6 +2,7 @@ package by.bsuir.alekseeva.flowershop.service.implementations;
 
 import by.bsuir.alekseeva.flowershop.beans.*;
 import by.bsuir.alekseeva.flowershop.service.OrderService;
+import by.bsuir.alekseeva.flowershop.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,22 +10,19 @@ import java.util.List;
 import java.util.Optional;
 
 public class OrderServiceImpl implements OrderService {
+    private final UserService userService;
     private final List<Order> orders = new ArrayList<>();
 
-    public OrderServiceImpl() {
+    public OrderServiceImpl(UserService userService) {
+        this.userService = userService;
+        User user = userService.getUserById(1).get();
         List<Item> orderItems = new ArrayList<>();
-        orderItems.add(new Item(1, new Product(1, "Rose", "Red rose", "rose.jpg", 10, 0.0F, 1), 5, 50));
-        orderItems.add(new Item(2, new Product(2, "Tulip", "Red tulip", "tulip.jpg", 5, 0.1F, 1), 9, 45));
+        orderItems.add(new Item(1, new Product(1, "Rose", "Red rose", "rose.jpg", 10, 0.0F), 5, 50));
+        orderItems.add(new Item(2, new Product(2, "Tulip", "Red tulip", "tulip.jpg", 5, 0.1F), 9, 45));
 
         orders.add(Order.builder()
                 .id(1)
-                .user(User.builder()
-                        .id(1)
-                        .username("user")
-                        .password("user")
-                        .email("user@gmail.com")
-                        .role(Role.USER)
-                        .build())
+                .user(user)
                 .orderItems(orderItems)
                 .totalPrice(95)
                 .status(OrderStatus.PAID)
@@ -34,32 +32,43 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void createOrderItem(int orderId, int itemId, int quantity) {
-        Item item = new Item();
-        Order order = getOrderById(orderId).get();
-        item.setId(order.getOrderItems().size() + 1);
-        item.setProduct(order.getOrderItems().get(itemId).getProduct());
-        item.setQuantity(quantity);
-        item.setPrice(item.getProduct().getPrice() * quantity);
-        order.getOrderItems().add(item);
-        order.setTotalPrice(order.getTotalPrice() + item.getPrice());
+    public void createOrder(int userId, List<Item> items, String address) {
+        Order order = new Order();
+        order.setId(orders.size() + 1);
+        order.setUser(userService.getUserById(userId).get());
+        order.setOrderItems(items);
+        order.setTotalPrice(items.stream().map(Item::getPrice).reduce(0.0F, Float::sum));
+        order.setStatus(OrderStatus.PAID);
+        order.setDate(LocalDateTime.now());
+        order.setAddress(address);
+        orders.add(order);
     }
 
     @Override
     public Optional<Order> getOrderById(int id) {
-        return orders.stream()
-                .filter(order -> order.getId() == id)
-                .findFirst();
-    }
-
-    @Override
-    public List<Item> getOrderItems(int orderId) {
-        return getOrderById(orderId).get().getOrderItems();
+        return Optional.ofNullable(orders.get(id));
     }
 
     @Override
     public List<Order> getOrders() {
         return orders;
+    }
+
+    @Override
+    public Page<Order> getOrders(int pageNumber, int pageSize) {
+        return orders.stream().collect(Page.toPage(pageNumber, pageSize));
+    }
+
+    @Override
+    public List<Order> getOrdersByUserId(int userId) {
+        return orders.stream()
+                .filter(order -> order.getUser().getId() == userId)
+                .toList();
+    }
+
+    @Override
+    public Page<Order> getOrdersByUserId(int userId, int pageNumber, int pageSize) {
+        return getOrdersByUserId(userId).stream().collect(Page.toPage(pageNumber, pageSize));
     }
 
     @Override
@@ -70,17 +79,5 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void changeOrderStatus(int id, OrderStatus status) {
         getOrderById(id).get().setStatus(status);
-    }
-
-    @Override
-    public void setOrderAddress(int id, String address) {
-        getOrderById(id).get().setAddress(address);
-    }
-
-    @Override
-    public float getTotalPrice(int id) {
-        return getOrderById(id).get().getOrderItems().stream()
-                .map(Item::getPrice)
-                .reduce(0.0F, Float::sum);
     }
 }

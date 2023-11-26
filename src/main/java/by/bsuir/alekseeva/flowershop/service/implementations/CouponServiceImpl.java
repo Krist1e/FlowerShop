@@ -1,6 +1,7 @@
 package by.bsuir.alekseeva.flowershop.service.implementations;
 
 import by.bsuir.alekseeva.flowershop.beans.Coupon;
+import by.bsuir.alekseeva.flowershop.beans.Page;
 import by.bsuir.alekseeva.flowershop.service.CouponService;
 
 import java.util.ArrayList;
@@ -29,6 +30,11 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public List<Coupon> getCoupons() {
         return coupons;
+    }
+
+    @Override
+    public Page<Coupon> getCoupons(int pageNumber, int pageSize) {
+        return coupons.stream().collect(Page.toPage(pageNumber, pageSize));
     }
 
     @Override

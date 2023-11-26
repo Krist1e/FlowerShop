@@ -1,5 +1,6 @@
 package by.bsuir.alekseeva.flowershop.service.implementations;
 
+import by.bsuir.alekseeva.flowershop.beans.Page;
 import by.bsuir.alekseeva.flowershop.beans.Product;
 import by.bsuir.alekseeva.flowershop.service.ProductService;
 
@@ -11,17 +12,9 @@ public class ProductServiceImpl implements ProductService {
     private final List<Product> products = new ArrayList<>();
 
     public ProductServiceImpl() {
-        products.add(Product.builder()
-                .id(1)
-                .name("Rose")
-                .price(10)
-                .build());
-        products.add(Product.builder()
-                .id(2)
-                .name("Tulip")
-                .price(5)
-                .discount(0.1F)
-                .build());
+        for (int i = 0; i < 100; i++) {
+            addProduct("Product " + i, "Description " + i, i * 100, i / 10f, "images/product.png");
+        }
     }
 
     @Override
@@ -41,6 +34,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getProducts() {
         return products;
+    }
+
+    @Override
+    public Page<Product> getProducts(int pageNumber, int pageSize) {
+        return products.stream().collect(Page.toPage(pageNumber, pageSize));
     }
 
     @Override

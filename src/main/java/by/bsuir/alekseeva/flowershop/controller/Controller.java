@@ -2,14 +2,13 @@ package by.bsuir.alekseeva.flowershop.controller;
 
 import by.bsuir.alekseeva.flowershop.controller.commands.Command;
 import by.bsuir.alekseeva.flowershop.controller.commands.CommandFactory;
+import by.bsuir.alekseeva.flowershop.controller.commands.CommandResult;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -22,26 +21,15 @@ public class Controller extends HttpServlet {
     public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         log.info("Request {}", request.getPathInfo());
         try {
-            String commandName = request.getPathInfo().substring(1);
-            Command command = commandFactory.getCommand(commandName);
-            String view = command.execute(request, response);
+            Command command = commandFactory.getCommand(request);
+            log.info("Command {}", command);
+            CommandResult commandResult = command.execute(request);
+            log.info("Command result {}", commandResult);
 
-            if (view.equals(commandName)) {
-                request.getRequestDispatcher("/WEB-INF/views/" + view + ".jsp").forward(request, response);
-            }
-        else {
-                response.sendRedirect(view);
-            }
-        }
-        catch (Exception e) {
+            commandResult.executeResult(request, response);
+        } catch (Exception e) {
             throw new ServletException("Executing command failed.", e);
         }
-    }
-
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        log.info("Request {}", request.getPathInfo());
-        response.setContentType("text/html");
-        service(request, response);
     }
 
     public void destroy() {

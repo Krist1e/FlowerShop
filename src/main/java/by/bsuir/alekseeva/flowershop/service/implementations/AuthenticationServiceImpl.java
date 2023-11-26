@@ -20,15 +20,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         try {
             Optional<User> user = userService.getUserByUsername(username);
             String passwordHash = Hashing.sha256().hashString(password, StandardCharsets.UTF_8).toString();
-            if (user.isPresent() && user.get().getPassword().equals(passwordHash)) {
-                return AuthenticationResult.builder()
-                        .success(true)
-                        .message("Successful authentication")
-                        .build();
+            if (user.isPresent()) {
+                if (user.get().getPassword().equals(passwordHash)) {
+                    return AuthenticationResult.builder()
+                            .success(true)
+                            .message("Successful authentication")
+                            .build();
+                } else {
+                    return AuthenticationResult.builder()
+                            .success(false)
+                            .message("Wrong password")
+                            .build();
+                }
             } else {
                 return AuthenticationResult.builder()
                         .success(false)
-                        .message("Wrong username or password")
+                        .message("User with this username doesn't exist")
                         .build();
             }
         } catch (Exception e) {

@@ -14,7 +14,7 @@ public class ServiceFactory {
     private ServiceFactory() {
         userService = new UserServiceImpl();
         productService = new ProductServiceImpl();
-        orderService = new OrderServiceImpl();
+        orderService = new OrderServiceImpl(userService);
         authenticationService = new AuthenticationServiceImpl(userService);
         cartService = new ShoppingCartServiceImpl(productService);
     }

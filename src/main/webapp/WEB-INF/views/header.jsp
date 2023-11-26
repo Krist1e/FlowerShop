@@ -16,7 +16,7 @@
     <p>Flower Shop</p>
 </div>
 <div class="topnav">
-    <a href="index.jsp">Home</a>
+    <a href="signIn.jsp">Home</a>
     <a href="about.jsp">About</a>
     <a href="contact.jsp">Contact</a>
     <a href="login.jsp">Login</a>

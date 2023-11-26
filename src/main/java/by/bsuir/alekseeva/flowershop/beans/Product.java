@@ -1,6 +1,9 @@
 package by.bsuir.alekseeva.flowershop.beans;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Data
@@ -13,5 +16,4 @@ public class Product {
     private String imagePath;
     private float price;
     private float discount;
-    private int rating;
 }
