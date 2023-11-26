@@ -20,7 +20,7 @@ public class CatalogPageCommand implements Command {
     @Override
     public CommandResult execute(HttpServletRequest request) throws CommandException {
         int page = RequestUtil.getPageNumber(request);
-        Page<Product> products = productService.getProducts(page, PAGE_SIZE);
+        Page<Product> products = productService.getInStockProducts(page, PAGE_SIZE);
 
         request.setAttribute("products", products);
         return new ViewResult("catalog");

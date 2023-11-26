@@ -9,8 +9,8 @@ import java.util.Optional;
 public interface ProductService {
     Optional<Product> getProductById(int id);
     Optional<Product> getProductByName(String name);
-    List<Product> getProducts();
-    Page<Product> getProducts(int pageNumber, int pageSize);
+    List<Product> getInStockProducts();
+    Page<Product> getInStockProducts(int pageNumber, int pageSize);
     void addProduct(String name, String description, int price, float discount, String imagePath);
     void deleteProduct(int id);
     void updateProduct(int id, String name, String description, int price, float discount, String imagePath);

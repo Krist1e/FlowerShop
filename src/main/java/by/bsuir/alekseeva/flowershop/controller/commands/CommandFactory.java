@@ -24,6 +24,9 @@ public class CommandFactory {
         commands.put(CommandName.CATALOG_PAGE, new CatalogPageCommand());
         commands.put(CommandName.SHOPPING_CART_PAGE, new ShoppingCartPageCommand());
         commands.put(CommandName.PROFILE_PAGE, new ProfilePageCommand());
+        commands.put(CommandName.USERS_PAGE, new UsersPageCommand());
+        commands.put(CommandName.BAN_USER, new BanCommand());
+        commands.put(CommandName.UNBAN_USER, new UnbanCommand());
     }
 
     public Command getCommand(HttpServletRequest request) throws CommandFactoryException {

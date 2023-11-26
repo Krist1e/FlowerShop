@@ -1,5 +1,6 @@
 package by.bsuir.alekseeva.flowershop.service.implementations;
 
+import by.bsuir.alekseeva.flowershop.beans.Role;
 import by.bsuir.alekseeva.flowershop.beans.User;
 import by.bsuir.alekseeva.flowershop.service.AuthenticationService;
 import by.bsuir.alekseeva.flowershop.service.UserService;
@@ -13,6 +14,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     public AuthenticationServiceImpl(UserService userService) {
         this.userService = userService;
+        register("admin@", "admin", "123");
+        register("user@", "user", "123");
+        User user = userService.getUserByUsername("admin").get();
+        user.setRole(Role.ADMIN);
     }
 
     @Override

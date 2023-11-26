@@ -31,7 +31,7 @@ class ProductServiceImplTest {
 
     @Test
     void getProducts() {
-        assertNotNull(productService.getProducts());
+        assertNotNull(productService.getInStockProducts());
     }
 
     @Test
@@ -77,7 +77,7 @@ class ProductServiceImplTest {
     void getProductsByPage() {
         int pageNumber = 1;
         int pageSize = 2;
-        assertNotNull(productService.getProducts(pageNumber, pageSize));
-        assertEquals(pageSize, productService.getProducts(pageNumber, pageSize).getContent().size());
+        assertNotNull(productService.getInStockProducts(pageNumber, pageSize));
+        assertEquals(pageSize, productService.getInStockProducts(pageNumber, pageSize).getContent().size());
     }
 }

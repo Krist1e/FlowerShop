@@ -3,33 +3,17 @@ package by.bsuir.alekseeva.flowershop.service.implementations;
 import by.bsuir.alekseeva.flowershop.beans.*;
 import by.bsuir.alekseeva.flowershop.service.OrderService;
 import by.bsuir.alekseeva.flowershop.service.UserService;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final UserService userService;
     private final List<Order> orders = new ArrayList<>();
-
-    public OrderServiceImpl(UserService userService) {
-        this.userService = userService;
-        User user = userService.getUserById(1).get();
-        List<Item> orderItems = new ArrayList<>();
-        orderItems.add(new Item(1, new Product(1, "Rose", "Red rose", "rose.jpg", 10, 0.0F), 5, 50));
-        orderItems.add(new Item(2, new Product(2, "Tulip", "Red tulip", "tulip.jpg", 5, 0.1F), 9, 45));
-
-        orders.add(Order.builder()
-                .id(1)
-                .user(user)
-                .orderItems(orderItems)
-                .totalPrice(95)
-                .status(OrderStatus.PAID)
-                .date(LocalDateTime.now())
-                .address("Minsk")
-                .build());
-    }
 
     @Override
     public void createOrder(int userId, List<Item> items, String address, String phone, String comments) {

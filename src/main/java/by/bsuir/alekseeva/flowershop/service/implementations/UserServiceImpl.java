@@ -5,33 +5,17 @@ import by.bsuir.alekseeva.flowershop.beans.Role;
 import by.bsuir.alekseeva.flowershop.beans.User;
 import by.bsuir.alekseeva.flowershop.service.ShoppingCartService;
 import by.bsuir.alekseeva.flowershop.service.UserService;
+import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final List<User> users = new ArrayList<>();
 
     private final ShoppingCartService shoppingCartService;
-
-    public UserServiceImpl(ShoppingCartService shoppingCartService) {
-        this.shoppingCartService = shoppingCartService;
-        users.add(User.builder()
-                .id(1)
-                .username("admin")
-                .password("admin")
-                .email("admin@gmail.com")
-                .role(Role.ADMIN)
-                .build());
-        users.add(User.builder()
-                .id(2)
-                .username("user")
-                .password("user")
-                .email("user@gmail.com")
-                .role(Role.USER)
-                .build());
-    }
 
     @Override
     public Optional<User> getUserByUsername(String name) {
