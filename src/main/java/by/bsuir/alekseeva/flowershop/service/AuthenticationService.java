@@ -6,7 +6,7 @@ import lombok.Data;
 public interface AuthenticationService {
     @Data
     @Builder
-    public class AuthenticationResult {
+    class AuthenticationResult {
         private boolean success;
         private String message;
     }

@@ -2,9 +2,11 @@ package by.bsuir.alekseeva.flowershop.tests;
 
 import by.bsuir.alekseeva.flowershop.beans.Role;
 import by.bsuir.alekseeva.flowershop.beans.User;
-import by.bsuir.alekseeva.flowershop.service.ServiceFactory;
+import by.bsuir.alekseeva.flowershop.service.ProductService;
+import by.bsuir.alekseeva.flowershop.service.ShoppingCartService;
 import by.bsuir.alekseeva.flowershop.service.UserService;
-import by.bsuir.alekseeva.flowershop.service.implementations.OrderServiceImpl;
+import by.bsuir.alekseeva.flowershop.service.implementations.ProductServiceImpl;
+import by.bsuir.alekseeva.flowershop.service.implementations.ShoppingCartServiceImpl;
 import by.bsuir.alekseeva.flowershop.service.implementations.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +20,9 @@ class UserServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        userService = new UserServiceImpl();
+        ProductService productService = new ProductServiceImpl();
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(productService);
+        userService = new UserServiceImpl(shoppingCartService);
     }
 
     @Test

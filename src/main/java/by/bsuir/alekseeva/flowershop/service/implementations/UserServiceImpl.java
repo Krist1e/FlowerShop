@@ -3,6 +3,7 @@ package by.bsuir.alekseeva.flowershop.service.implementations;
 import by.bsuir.alekseeva.flowershop.beans.Page;
 import by.bsuir.alekseeva.flowershop.beans.Role;
 import by.bsuir.alekseeva.flowershop.beans.User;
+import by.bsuir.alekseeva.flowershop.service.ShoppingCartService;
 import by.bsuir.alekseeva.flowershop.service.UserService;
 
 import java.util.ArrayList;
@@ -12,7 +13,10 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final List<User> users = new ArrayList<>();
 
-    public UserServiceImpl() {
+    private final ShoppingCartService shoppingCartService;
+
+    public UserServiceImpl(ShoppingCartService shoppingCartService) {
+        this.shoppingCartService = shoppingCartService;
         users.add(User.builder()
                 .id(1)
                 .username("admin")
@@ -62,6 +66,7 @@ public class UserServiceImpl implements UserService {
                 .email(email)
                 .role(Role.USER)
                 .build());
+        shoppingCartService.createCart(users.size());
     }
 
     @Override

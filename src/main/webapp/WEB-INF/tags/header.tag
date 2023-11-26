@@ -15,9 +15,11 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Каталог товаров</a>
+                        <a class="nav-link" href="<c:url value="/controller/catalog-page"/>">Каталог товаров</a>
                     </li>
-                    <!-- TODO -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="<c:url value="/controller/shopping-cart-page"/>">Корзина</a>
+                    </li>
                 </ul>
             </div>
         </div>

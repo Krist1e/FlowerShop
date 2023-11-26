@@ -1,6 +1,5 @@
 package by.bsuir.alekseeva.flowershop.controller.commands.implementations.pages;
 
-import by.bsuir.alekseeva.flowershop.beans.Item;
 import by.bsuir.alekseeva.flowershop.beans.ShoppingCart;
 import by.bsuir.alekseeva.flowershop.controller.commands.Command;
 import by.bsuir.alekseeva.flowershop.controller.commands.CommandResult;
@@ -11,7 +10,6 @@ import by.bsuir.alekseeva.flowershop.service.ShoppingCartService;
 import by.bsuir.alekseeva.flowershop.utils.RequestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.List;
 import java.util.Optional;
 
 public class ShoppingCartPageCommand implements Command {
@@ -23,11 +21,10 @@ public class ShoppingCartPageCommand implements Command {
 
         Optional<ShoppingCart> cart = cartService.getCartByUserId(userId);
         if (cart.isEmpty()) {
-            return new ViewResult("shoppingCart");
+            return new ViewResult("cart");
         }
-        List<Item> items = cart.get().getCartItems();
 
-        request.setAttribute("items", items);
-        return new ViewResult("shoppingCart");
+        request.setAttribute("cart", cart.get());
+        return new ViewResult("cart");
     }
 }

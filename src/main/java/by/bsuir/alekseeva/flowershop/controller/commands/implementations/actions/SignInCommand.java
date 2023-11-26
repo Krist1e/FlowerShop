@@ -30,10 +30,13 @@ public class SignInCommand implements Command {
         log.info("Authentication result: {}", result);
         if (result.isSuccess()) {
             Optional<User> user = userService.getUserByUsername(username);
+            if (user.isEmpty()) {
+                throw new CommandException("No such user");
+            }
             request.getSession().setAttribute("user", user.get());
-            request.getSession().setAttribute("role", user.get().getRole());
             return new RedirectResult(CommandName.CATALOG_PAGE);
         } else {
+            request.setAttribute("username", username);
             request.setAttribute("error", result.getMessage());
             return new ViewResult("signIn");
         }

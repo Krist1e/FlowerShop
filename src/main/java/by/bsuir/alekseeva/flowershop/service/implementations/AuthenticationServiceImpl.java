@@ -24,24 +24,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 if (user.get().getPassword().equals(passwordHash)) {
                     return AuthenticationResult.builder()
                             .success(true)
-                            .message("Successful authentication")
+                            .message("success")
                             .build();
                 } else {
                     return AuthenticationResult.builder()
                             .success(false)
-                            .message("Wrong password")
+                            .message("wrong_password")
                             .build();
                 }
             } else {
                 return AuthenticationResult.builder()
                         .success(false)
-                        .message("User with this username doesn't exist")
+                        .message("no_such_user")
                         .build();
             }
         } catch (Exception e) {
             return AuthenticationResult.builder()
                     .success(false)
-                    .message("Something went wrong")
+                    .message("something_went_wrong")
                     .build();
         }
     }
@@ -53,20 +53,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             if (user.isPresent()) {
                 return RegistrationResult.builder()
                         .success(false)
-                        .message("User with this username already exists")
+                        .message("user_already_exists")
                         .build();
             } else {
                 String passwordHash = Hashing.sha256().hashString(password, StandardCharsets.UTF_8).toString();
                 userService.addUser(username, passwordHash, email);
                 return RegistrationResult.builder()
                         .success(true)
-                        .message("Successful registration")
+                        .message("success")
                         .build();
             }
         } catch (Exception e) {
             return RegistrationResult.builder()
                     .success(false)
-                    .message("Something went wrong")
+                    .message("something_went_wrong")
                     .build();
         }
     }

@@ -1,8 +1,12 @@
 package by.bsuir.alekseeva.flowershop.tests;
 
 import by.bsuir.alekseeva.flowershop.service.AuthenticationService;
+import by.bsuir.alekseeva.flowershop.service.ProductService;
+import by.bsuir.alekseeva.flowershop.service.ShoppingCartService;
 import by.bsuir.alekseeva.flowershop.service.UserService;
 import by.bsuir.alekseeva.flowershop.service.implementations.AuthenticationServiceImpl;
+import by.bsuir.alekseeva.flowershop.service.implementations.ProductServiceImpl;
+import by.bsuir.alekseeva.flowershop.service.implementations.ShoppingCartServiceImpl;
 import by.bsuir.alekseeva.flowershop.service.implementations.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +18,9 @@ class AuthenticationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        UserService userService = new UserServiceImpl();
+        ProductService productService = new ProductServiceImpl();
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(productService);
+        UserService userService = new UserServiceImpl(shoppingCartService);
         authenticationService = new AuthenticationServiceImpl(userService);
     }
 

@@ -45,7 +45,7 @@ class ShoppingCartServiceImplTest {
         int cartId = 1;
         int itemId = 1;
         int quantity = 10;
-        cartService.updateItemInCart(cartId, itemId, quantity);
+        cartService.updateItemQuantity(cartId, itemId, quantity);
         Item cartItem = cartService.getCartByUserId(1).get().getCartItems().stream()
                 .filter(item -> item.getId() == itemId)
                 .findFirst().get();

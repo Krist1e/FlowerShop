@@ -12,11 +12,11 @@ public class ServiceFactory {
     private final ShoppingCartService cartService;
 
     private ServiceFactory() {
-        userService = new UserServiceImpl();
         productService = new ProductServiceImpl();
+        cartService = new ShoppingCartServiceImpl(productService);
+        userService = new UserServiceImpl(cartService);
         orderService = new OrderServiceImpl(userService);
         authenticationService = new AuthenticationServiceImpl(userService);
-        cartService = new ShoppingCartServiceImpl(productService);
     }
 
     private static final ServiceFactory serviceFactory;
