@@ -19,8 +19,9 @@ import java.io.IOException;
 @WebServlet(name = "Controller", value = "/controller")
 public class Controller extends HttpServlet {
 
-    private final CommandFactory commandFactory = CommandFactory.getInstance();
+    private final transient CommandFactory commandFactory = CommandFactory.getInstance();
 
+    @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         log.debug("Request {}", request.getPathInfo());
         CommandResult commandResult;
@@ -40,10 +41,7 @@ public class Controller extends HttpServlet {
             log.debug("Command result {}", commandResult.getClass().getSimpleName());
             commandResult.executeResult(request, response);
         } catch (CommandException e) {
-            log.error("Command result failed", e);
+            log.error("Command result failed", e.getInnerException());
         }
-    }
-
-    public void destroy() {
     }
 }
