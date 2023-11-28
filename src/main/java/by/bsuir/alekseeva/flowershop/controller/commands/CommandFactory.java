@@ -6,12 +6,12 @@ import by.bsuir.alekseeva.flowershop.exception.CommandFactoryException;
 import by.bsuir.alekseeva.flowershop.service.ServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class CommandFactory {
     private static final CommandFactory commandFactory = new CommandFactory();
-    private final Map<CommandName, Command> commands = new HashMap<>();
+    private final Map<CommandName, Command> commands = new EnumMap<>(CommandName.class);
 
     private CommandFactory() {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();

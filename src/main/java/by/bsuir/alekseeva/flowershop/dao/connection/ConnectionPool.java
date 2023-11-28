@@ -11,14 +11,15 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
 public class ConnectionPool {
     private static final ReentrantLock lock = new ReentrantLock();
-    private final ArrayBlockingQueue<Connection> usedConnections;
-    private final ArrayBlockingQueue<Connection> freeConnections;
-    private volatile static ConnectionPool connectionPool;
+    private final BlockingQueue<Connection> usedConnections;
+    private final BlockingQueue<Connection> freeConnections;
+    private static ConnectionPool connectionPool;
 
     public static ConnectionPool getInstance() {
         try {
@@ -33,6 +34,10 @@ public class ConnectionPool {
             lock.unlock();
         }
         return connectionPool;
+    }
+
+    public static void init() {
+        getInstance();
     }
 
     private ConnectionPool() {
@@ -53,13 +58,17 @@ public class ConnectionPool {
             properties.put("characterEncoding", "UTF-8");
             properties.put("useUnicode", "true");
             for (int i = 0; i < poolSize; i++) {
-                Connection connection = DriverManager.getConnection(url, properties);
-                freeConnections.add(connection);
+                freeConnections.add(createConnection(url, properties));
             }
         } catch (SQLException | ClassNotFoundException e) {
             log.error("Can not create ConnectionPool", e);
             throw new RuntimeException("Can not create ConnectionPool", e);
         }
+    }
+
+    private Connection createConnection(String url, Properties properties) throws SQLException {
+        Connection connection = DriverManager.getConnection(url, properties);
+        return new ProxyConnection(connection, this);
     }
 
     public Connection getConnection() {
@@ -77,7 +86,11 @@ public class ConnectionPool {
     public void releaseConnection(Connection connection) throws SQLException {
         if (connection != null) {
             connection.setAutoCommit(true);
-            usedConnections.remove(connection);
+            boolean isRemoved = usedConnections.remove(connection);
+            if (!isRemoved) {
+                log.error("Can not remove connection from used connections");
+                throw new SQLException("Can not remove connection from used connections");
+            }
             freeConnections.add(connection);
         }
     }

@@ -6,7 +6,6 @@ import by.bsuir.alekseeva.flowershop.controller.commands.CommandResult;
 import by.bsuir.alekseeva.flowershop.controller.commands.implementations.results.RedirectResult;
 import by.bsuir.alekseeva.flowershop.exception.CommandException;
 import by.bsuir.alekseeva.flowershop.exception.ServiceException;
-import by.bsuir.alekseeva.flowershop.service.ServiceFactory;
 import by.bsuir.alekseeva.flowershop.service.ShoppingCartService;
 import by.bsuir.alekseeva.flowershop.utils.RequestUtil;
 import jakarta.servlet.http.HttpServletRequest;

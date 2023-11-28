@@ -9,7 +9,6 @@ import by.bsuir.alekseeva.flowershop.controller.commands.implementations.results
 import by.bsuir.alekseeva.flowershop.exception.CommandException;
 import by.bsuir.alekseeva.flowershop.exception.ServiceException;
 import by.bsuir.alekseeva.flowershop.service.AuthenticationService;
-import by.bsuir.alekseeva.flowershop.service.ServiceFactory;
 import by.bsuir.alekseeva.flowershop.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

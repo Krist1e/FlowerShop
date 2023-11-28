@@ -28,6 +28,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         try {
             return shoppingCartDAO.getCartByUserId(userId);
         } catch (DAOException e) {
+            log.error("Error while getting cart by user id", e);
             throw new ServiceException(e);
         }
     }
@@ -50,12 +51,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             Item item = itemOptional.get();
             item.setQuantity(item.getQuantity() + 1);
             item.setPrice(item.getPrice() + item.getProduct().getDiscountedPrice());
+            cart.setTotalPrice(cart.getTotalPrice() + item.getProduct().getDiscountedPrice());
         } else {
             createItem(productId, cart);
         }
         try {
             shoppingCartDAO.update(cart);
         } catch (DAOException e) {
+            log.error("Error while updating cart", e);
             throw new ServiceException(e);
         }
         log.debug("Item {} added to cart {}", productId, userId);
@@ -70,13 +73,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             throw new ServiceException(e);
         }
         if (product.isEmpty()) {
+            log.error("Product not found");
             throw new ServiceException("Product not found");
         }
         Item item = Item.builder()
-                .id(cart.getCartItems().size() + 1)
                 .product(product.get())
                 .quantity(1)
                 .build();
+        item.setPrice(item.getProduct().getDiscountedPrice());
+        cart.setTotalPrice(cart.getTotalPrice() + item.getProduct().getDiscountedPrice());
         cart.getCartItems().add(item);
     }
 
@@ -90,6 +95,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         try {
             shoppingCartDAO.update(cart);
         } catch (DAOException e) {
+            log.error("Error while updating cart", e);
             throw new ServiceException(e);
         }
         log.debug("Item {} deleted from cart {}", itemId, userId);
@@ -98,6 +104,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void updateItemQuantity(int userId, int itemId, int quantity) throws ServiceException {
         ShoppingCart cart = getShoppingCart(userId);
+        if (quantity <= 0) {
+            deleteItemFromCart(userId, itemId);
+            return;
+        }
         Item item = getItem(cart, itemId);
         item.setQuantity(quantity);
         float price = item.getProduct().getDiscountedPrice() * quantity;
@@ -106,6 +116,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         try {
             shoppingCartDAO.update(cart);
         } catch (DAOException e) {
+            log.error("Error while updating cart", e);
             throw new ServiceException(e);
         }
     }
@@ -119,6 +130,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         try {
             shoppingCartDAO.update(cart);
         } catch (DAOException e) {
+            log.error("Error while updating cart", e);
             throw new ServiceException(e);
         }
         log.info("Cart {} cleared", userId);
@@ -142,6 +154,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         try {
             shoppingCartDAO.update(cart);
         } catch (DAOException e) {
+            log.error("Error while updating cart", e);
             throw new ServiceException(e);
         }
     }
@@ -151,6 +164,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .filter(i -> i.getId() == itemId)
                 .findFirst();
         if (itemOptional.isEmpty()) {
+            log.error("Item not found");
             throw new ServiceException("Item not found");
         }
         return itemOptional.get();
@@ -159,6 +173,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private ShoppingCart getShoppingCart(int userId) throws ServiceException {
         Optional<ShoppingCart> cartOptional = getCartByUserId(userId);
         if (cartOptional.isEmpty()) {
+            log.error("Cart not found");
             throw new ServiceException("Cart not found");
         }
         return cartOptional.get();

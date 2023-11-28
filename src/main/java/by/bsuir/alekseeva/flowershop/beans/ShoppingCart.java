@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShoppingCart {
+    private int id;
     private User user;
     private List<Item> cartItems;
     private Coupon coupon;

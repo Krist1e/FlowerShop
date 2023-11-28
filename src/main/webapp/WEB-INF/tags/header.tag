@@ -26,7 +26,7 @@
                         <a class="nav-link" href="<c:url value="/controller/profile-page"/>">Профиль (${sessionScope.user.username})</a>
                     </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<c:url value="/controller/logout"/>">Выйти</a>
+                            <a class="nav-link" href="<c:url value="/controller/sign-out"/>">Выйти</a>
                         </li>
                     </c:if>
 

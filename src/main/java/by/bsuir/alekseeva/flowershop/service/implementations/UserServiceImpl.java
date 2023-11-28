@@ -101,6 +101,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void unbanUser(int id) throws ServiceException {
         User user = getUser(id);
+        user.setRole(Role.USER);
         try {
             userDAO.updateUser(user);
         } catch (DAOException e) {

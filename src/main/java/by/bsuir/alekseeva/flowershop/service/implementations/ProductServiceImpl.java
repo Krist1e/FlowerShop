@@ -1,8 +1,11 @@
 package by.bsuir.alekseeva.flowershop.service.implementations;
 
+import by.bsuir.alekseeva.flowershop.beans.Item;
 import by.bsuir.alekseeva.flowershop.beans.Page;
 import by.bsuir.alekseeva.flowershop.beans.Product;
+import by.bsuir.alekseeva.flowershop.beans.ShoppingCart;
 import by.bsuir.alekseeva.flowershop.dao.ProductDAO;
+import by.bsuir.alekseeva.flowershop.dao.ShoppingCartDAO;
 import by.bsuir.alekseeva.flowershop.exception.DAOException;
 import by.bsuir.alekseeva.flowershop.exception.ServiceException;
 import by.bsuir.alekseeva.flowershop.service.ProductService;
@@ -18,6 +21,7 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductDAO productDAO;
+    private final ShoppingCartDAO shoppingCartDAO;
 
     @Override
     public Optional<Product> getProductById(int id) throws ServiceException {
@@ -84,6 +88,26 @@ public class ProductServiceImpl implements ProductService {
             log.error("Error while deleting product", e);
             throw new ServiceException(e);
         }
+        List<ShoppingCart> carts = getShoppingCartsForUpdate(id);
+        deleteFromCarts(id, carts);
+    }
+
+    private void deleteFromCarts(int id, List<ShoppingCart> carts) throws ServiceException {
+        for (ShoppingCart cart : carts) {
+            List<Item> items = new ArrayList<>(cart.getCartItems());
+            for (Item item : items) {
+                if (item.getProduct().getId() == id) {
+                    cart.setTotalPrice(cart.getTotalPrice() - item.getPrice());
+                    cart.getCartItems().remove(item);
+                }
+            }
+            try {
+                shoppingCartDAO.update(cart);
+            } catch (DAOException e) {
+                log.error("Error while updating cart", e);
+                throw new ServiceException(e);
+            }
+        }
     }
 
     @Override
@@ -102,5 +126,37 @@ public class ProductServiceImpl implements ProductService {
             log.error("Error while updating product", e);
             throw new ServiceException(e);
         }
+        List<ShoppingCart> carts = getShoppingCartsForUpdate(id);
+        updateCarts(id, carts);
+    }
+
+    private void updateCarts(int id, List<ShoppingCart> carts) throws ServiceException {
+        for (ShoppingCart cart : carts) {
+            List<Item> items = new ArrayList<>(cart.getCartItems());
+            for (Item item : items) {
+                if (item.getProduct().getId() == id) {
+                    cart.setTotalPrice(cart.getTotalPrice() - item.getPrice());
+                    item.setPrice(item.getProduct().getDiscountedPrice() * item.getQuantity());
+                    cart.setTotalPrice(cart.getTotalPrice() + item.getPrice());
+                }
+            }
+            try {
+                shoppingCartDAO.update(cart);
+            } catch (DAOException e) {
+                log.error("Error while updating cart", e);
+                throw new ServiceException(e);
+            }
+        }
+    }
+
+    private List<ShoppingCart> getShoppingCartsForUpdate(int id) throws ServiceException {
+        List<ShoppingCart> carts;
+        try {
+            carts = shoppingCartDAO.getCartsByProductId(id);
+        } catch (DAOException e) {
+            log.error("Error while getting carts by product id", e);
+            throw new ServiceException(e);
+        }
+        return carts;
     }
 }

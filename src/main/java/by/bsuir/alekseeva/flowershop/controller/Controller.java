@@ -4,6 +4,7 @@ import by.bsuir.alekseeva.flowershop.controller.commands.Command;
 import by.bsuir.alekseeva.flowershop.controller.commands.CommandFactory;
 import by.bsuir.alekseeva.flowershop.controller.commands.CommandResult;
 import by.bsuir.alekseeva.flowershop.controller.commands.implementations.results.StatusCodeResult;
+import by.bsuir.alekseeva.flowershop.dao.connection.ConnectionPool;
 import by.bsuir.alekseeva.flowershop.exception.CommandException;
 import by.bsuir.alekseeva.flowershop.exception.CommandFactoryException;
 import jakarta.servlet.ServletException;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 @Slf4j
 @WebServlet(name = "Controller", value = "/controller")
@@ -42,6 +44,27 @@ public class Controller extends HttpServlet {
             commandResult.executeResult(request, response);
         } catch (CommandException e) {
             log.error("Command result failed", e.getInnerException());
+        }
+    }
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        try {
+            ConnectionPool.init();
+        } catch (Exception e) {
+            log.error("Can not init ConnectionPool", e);
+            throw new ServletException("Can not init ConnectionPool", e);
+        }
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        try {
+            ConnectionPool.getInstance().destroyPool();
+        } catch (SQLException e) {
+            log.error("Can not destroy ConnectionPool", e);
         }
     }
 }

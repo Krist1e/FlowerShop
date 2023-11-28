@@ -15,6 +15,6 @@
         <a href="<c:url value="/controller/update-quantity?id=${item.id}&changed=1"/>"
            class="btn btn-sm btn-primary"><i class="bi bi-plus"></i></a>
     </td>
-    <td><fmt:message key="product.price"/><fmt:formatNumber value="${item.price}" type="currency"/></td>
+    <td><fmt:formatNumber value="${item.price}" type="currency"/></td>
     <td><a href="<c:url value="/controller/update-quantity?id=${item.id}&quantity=0"/>" class="btn btn-sm btn-danger ml-2"><i class="bi bi-trash"></i></a></td>
 </tr>

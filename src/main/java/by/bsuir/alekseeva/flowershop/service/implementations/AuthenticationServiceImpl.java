@@ -1,24 +1,17 @@
 package by.bsuir.alekseeva.flowershop.service.implementations;
 
-import by.bsuir.alekseeva.flowershop.beans.Role;
 import by.bsuir.alekseeva.flowershop.beans.User;
 import by.bsuir.alekseeva.flowershop.service.AuthenticationService;
 import by.bsuir.alekseeva.flowershop.service.UserService;
 import com.google.common.hash.Hashing;
+import lombok.RequiredArgsConstructor;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserService userService;
-
-    public AuthenticationServiceImpl(UserService userService) {
-        this.userService = userService;
-        register("admin@", "admin", "123");
-        register("user@", "user", "123");
-        User user = userService.getUserByUsername("admin").get();
-        user.setRole(Role.ADMIN);
-    }
 
     @Override
     public AuthenticationResult authenticate(String username, String password) {

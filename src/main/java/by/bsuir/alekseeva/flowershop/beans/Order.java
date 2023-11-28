@@ -25,7 +25,7 @@ public class Order {
     private Coupon coupon;
 
     public float getDiscountedPrice() {
-        return totalPrice * (1 - coupon.getDiscount());
+        return coupon != null ? totalPrice * (1 - coupon.getDiscount()) : totalPrice;
     }
 }
 

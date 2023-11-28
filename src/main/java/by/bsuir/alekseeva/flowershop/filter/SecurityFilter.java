@@ -39,7 +39,14 @@ public class SecurityFilter implements Filter {
         }
         log.debug("User role: {}", userRole);
 
-        CommandName command = CommandName.of(request);
+        CommandName command;
+        try {
+            command = CommandName.of(request);
+        } catch (IllegalArgumentException e) {
+            log.debug("No command");
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
         List<Role> commandRoles = SecurityConfig.getCommandRoles(command);
         log.debug("Command {} roles: {}", command, commandRoles);
 

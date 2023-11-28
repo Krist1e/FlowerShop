@@ -7,7 +7,6 @@ import by.bsuir.alekseeva.flowershop.controller.commands.implementations.results
 import by.bsuir.alekseeva.flowershop.exception.CommandException;
 import by.bsuir.alekseeva.flowershop.exception.ServiceException;
 import by.bsuir.alekseeva.flowershop.service.ProductService;
-import by.bsuir.alekseeva.flowershop.service.ServiceFactory;
 import by.bsuir.alekseeva.flowershop.utils.RequestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +26,12 @@ public class UpdateProductCommand implements Command {
         String image = request.getParameter("image");
         String priceString = request.getParameter("price");
         String discountString = request.getParameter("discount");
-        if (stringProductId == null || name == null || description == null || priceString == null || image == null || discountString == null)
-            throw new CommandException("Failed to get parameters");
+        validate(stringProductId, name, description, priceString, image, discountString);
         log.debug("Update product: id = {}, name = {}, description = {}, image = {}, price = {}, discount = {}", stringProductId, name, description, image, priceString, discountString);
 
         int productId = Integer.parseInt(stringProductId);
         float price = Float.parseFloat(priceString);
-        float discount = Float.parseFloat(discountString);
+        float discount = discountString.isBlank() ? 0 : Float.parseFloat(discountString);
 
         try {
             productService.updateProduct(productId, name, description, price, discount, image);
@@ -44,5 +42,16 @@ public class UpdateProductCommand implements Command {
 
         log.info("Product {} updated", productId);
         return new RedirectResult(CommandName.CATALOG_PAGE, pageNumber);
+    }
+
+    private static void validate(String stringProductId, String name, String description, String priceString, String image, String discountString) throws CommandException {
+        if (stringProductId == null || name == null || description == null || priceString == null || image == null || discountString == null) {
+            log.error("Failed to get parameters");
+            throw new CommandException("Failed to get parameters");
+        }
+        if (name.isBlank() || description.isBlank() || stringProductId.isBlank() || priceString.isBlank()) {
+            log.error("Invalid parameters");
+            throw new CommandException("Invalid parameters");
+        }
     }
 }

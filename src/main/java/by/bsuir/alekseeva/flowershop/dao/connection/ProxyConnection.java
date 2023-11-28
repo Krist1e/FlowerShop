@@ -1,24 +1,23 @@
 package by.bsuir.alekseeva.flowershop.dao.connection;
 
 import by.bsuir.alekseeva.flowershop.exception.ConnectionException;
+import lombok.RequiredArgsConstructor;
 
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+@RequiredArgsConstructor
 public class ProxyConnection implements Connection{
 
     private final Connection connection;
-
-    ProxyConnection(Connection connection) {
-        this.connection = connection;
-    }
+    private final ConnectionPool connectionPool;
 
     @Override
     public void close() throws ConnectionException {
         try {
-            ConnectionPool.getInstance().releaseConnection(this);
+            connectionPool.releaseConnection(this);
         } catch (SQLException e) {
             throw new ConnectionException("Error in close", e);
         }

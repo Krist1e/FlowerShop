@@ -6,12 +6,10 @@ import by.bsuir.alekseeva.flowershop.dao.UserDAO;
 import by.bsuir.alekseeva.flowershop.exception.DAOException;
 import by.bsuir.alekseeva.flowershop.exception.ServiceException;
 import by.bsuir.alekseeva.flowershop.service.OrderService;
-import by.bsuir.alekseeva.flowershop.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +42,7 @@ public class OrderServiceImpl implements OrderService {
                 .date(LocalDateTime.now())
                 .orderItems(cart.getCartItems())
                 .totalPrice(cart.getTotalPrice())
+                .coupon(cart.getCoupon())
                 .build();
 
         try {

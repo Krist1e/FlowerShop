@@ -7,7 +7,6 @@ import by.bsuir.alekseeva.flowershop.controller.commands.implementations.results
 import by.bsuir.alekseeva.flowershop.controller.commands.implementations.results.ViewResult;
 import by.bsuir.alekseeva.flowershop.exception.CommandException;
 import by.bsuir.alekseeva.flowershop.service.AuthenticationService;
-import by.bsuir.alekseeva.flowershop.service.ServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -16,7 +16,7 @@ public class ServiceFactory {
     private ServiceFactory() {
         DAOFactory daoFactory = DAOFactory.getInstance();
         couponService = new CouponServiceImpl(daoFactory.getCouponDAO());
-        productService = new ProductServiceImpl(daoFactory.getProductDAO());
+        productService = new ProductServiceImpl(daoFactory.getProductDAO(), daoFactory.getShoppingCartDAO());
         cartService = new ShoppingCartServiceImpl(daoFactory.getProductDAO(), daoFactory.getCouponDAO(), daoFactory.getShoppingCartDAO());
         userService = new UserServiceImpl(daoFactory.getShoppingCartDAO(), daoFactory.getUserDAO());
         orderService = new OrderServiceImpl(daoFactory.getUserDAO(), daoFactory.getOrderDAO());

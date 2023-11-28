@@ -3,16 +3,16 @@ package by.bsuir.alekseeva.flowershop.filter;
 import by.bsuir.alekseeva.flowershop.beans.Role;
 import by.bsuir.alekseeva.flowershop.controller.commands.CommandName;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 import static by.bsuir.alekseeva.flowershop.controller.commands.CommandName.*;
 
 public class SecurityConfig {
-    private final static List<Role> allRoles = List.of(Role.values());
+    private static final List<Role> allRoles = List.of(Role.values());
 
-    private final static Map<CommandName, List<Role>> commandRoles = new HashMap<>();
+    private static final Map<CommandName, List<Role>> commandRoles = new EnumMap<>(CommandName.class);
 
     static {
         commandRoles.put(SIGN_UP, allRoles);

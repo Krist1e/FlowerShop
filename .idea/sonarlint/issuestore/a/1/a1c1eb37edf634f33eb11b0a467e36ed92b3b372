@@ -1,0 +1,5 @@
+
+g	java:S112 "FDefine and throw a dedicated exception instead of using a generic one.(ß¬È«şÿÿÿÿ8å»˜­Á1
+b	java:S112A"FDefine and throw a dedicated exception instead of using a generic one.(ÔÌèâ8æ»˜­Á1
+»
+java:S6548"˜A Singleton implementation was detected. Make sure the use of the Singleton pattern is required and the implementation is the right one for the context.(åâÕÿÿÿÿÿ8ñ»˜­Á1

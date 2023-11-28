@@ -1,6 +1,8 @@
 package by.bsuir.alekseeva.flowershop.service;
 
-import by.bsuir.alekseeva.flowershop.beans.*;
+import by.bsuir.alekseeva.flowershop.beans.Order;
+import by.bsuir.alekseeva.flowershop.beans.Page;
+import by.bsuir.alekseeva.flowershop.beans.ShoppingCart;
 import by.bsuir.alekseeva.flowershop.exception.ServiceException;
 
 import java.util.List;

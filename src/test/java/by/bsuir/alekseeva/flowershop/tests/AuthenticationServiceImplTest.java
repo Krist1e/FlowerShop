@@ -12,10 +12,7 @@ class AuthenticationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        CouponService couponService = new CouponServiceImpl();
-        ProductService productService = new ProductServiceImpl();
-        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(productService, couponService);
-        UserService userService = new UserServiceImpl(shoppingCartService);
+        UserService userService = new UserServiceImpl();
         authenticationService = new AuthenticationServiceImpl(userService);
     }
 

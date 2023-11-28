@@ -7,15 +7,13 @@ import lombok.Getter;
 @Getter
 public class DAOFactory {
     @Getter
-    private final static DAOFactory instance;
+    private static final DAOFactory instance;
 
     private final UserDAO userDAO;
     private final ProductDAO productDAO;
     private final OrderDAO orderDAO;
     private final CouponDAO couponDAO;
     private final ShoppingCartDAO shoppingCartDAO;
-    private final CartItemDAO cartItemDAO;
-    private final RoleDAO roleDAO;
 
     static {
         instance = new DAOFactory();
@@ -23,12 +21,10 @@ public class DAOFactory {
 
     private DAOFactory() {
         ConnectionPool connectionPool = ConnectionPool.getInstance();
-        roleDAO = new RoleDAOImpl();
-        userDAO = new UserDAOImpl(connectionPool, roleDAO);
-        productDAO = new ProductDAOImpl();
-        orderDAO = new OrderDAOImpl();
-        couponDAO = new CouponDAOImpl();
-        shoppingCartDAO = new ShoppingCartDAOImpl();
-        cartItemDAO = new CartItemDAOImpl();
+        userDAO = new UserDAOImpl(connectionPool);
+        productDAO = new ProductDAOImpl(connectionPool);
+        orderDAO = new OrderDAOImpl(connectionPool);
+        couponDAO = new CouponDAOImpl(connectionPool);
+        shoppingCartDAO = new ShoppingCartDAOImpl(connectionPool);
     }
 }
