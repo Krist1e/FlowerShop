@@ -1,6 +1,6 @@
 <%@tag description="Header" pageEncoding="UTF-8" %>
-<%@taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="text"/>
 
@@ -15,44 +15,44 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <a class="nav-link" href="<c:url value="/controller/catalog-page"/>">Каталог товаров</a>
+                        <a class="nav-link" href="<c:url value="/controller/catalog-page"/>"><fmt:message key="header.catalog"/></a>
                     </li>
 
                     <c:if test="${sessionScope.user != null}">
                         <li class="nav-item">
-                            <a class="nav-link" href="<c:url value="/controller/shopping-cart-page"/>">Корзина</a>
+                            <a class="nav-link" href="<c:url value="/controller/shopping-cart-page"/>"><fmt:message key="header.cart"/></a>
                         </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<c:url value="/controller/profile-page"/>">Профиль (${sessionScope.user.username})</a>
+                        <a class="nav-link" href="<c:url value="/controller/profile-page"/>"><fmt:message key="header.profile"/> (${sessionScope.user.username})</a>
                     </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<c:url value="/controller/sign-out"/>">Выйти</a>
+                            <a class="nav-link" href="<c:url value="/controller/sign-out"/>"><fmt:message key="header.signOut"/></a>
                         </li>
                     </c:if>
 
                     <c:if test="${sessionScope.user != null && sessionScope.user.role == 'ADMIN'}">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="adminPanel">
-                                Admin Panel
+                                <fmt:message key="header.adminPanel"/>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="adminPanel">
-                                <li><a class="dropdown-item" href="<c:url value="/controller/users-page"/>">Users</a></li>
-                                <li><a class="dropdown-item" href="<c:url value="/controller/coupons-page"/>">Coupons</a></li>
+                                <li><a class="dropdown-item" href="<c:url value="/controller/users-page"/>"><fmt:message key="header.adminPanel.users"/></a></li>
+                                <li><a class="dropdown-item" href="<c:url value="/controller/coupons-page"/>"><fmt:message key="header.adminPanel.coupons"/></a></li>
                             </ul>
                         </li>
                     </c:if>
 
                     <c:if test="${sessionScope.user == null}">
                     <li class="nav-item">
-                        <a class="nav-link" href="<c:url value="/controller/sign-in-page"/>">Войти</a>
+                        <a class="nav-link" href="<c:url value="/controller/sign-in-page"/>"><fmt:message key="header.signIn"/></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<c:url value="/controller/sign-up-page"/>">Зарегистрироваться</a>
+                        <a class="nav-link" href="<c:url value="/controller/sign-up-page"/>"><fmt:message key="header.signUp"/></a>
                     </li>
                     </c:if>
                     <li class="nav-item dropdown border-start ms-2">
                         <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="navbarLang">
-                            Language
+                            <fmt:message key="header.language"/>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarLang">
                             <li><a class="dropdown-item" onclick="changeLocale('en-US')">English</a></li>

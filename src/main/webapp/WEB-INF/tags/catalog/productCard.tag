@@ -10,7 +10,7 @@
 <%@attribute name="product" required="true" type="by.bsuir.alekseeva.flowershop.beans.Product" %>
 <div class="col-md-4 mb-4">
     <div class="card h-100 rounded-4">
-        <img src="${product.imagePath}" class="card-img-top" alt="${product.name}">
+        <img src="../${product.imagePath}" class="card-img-top" alt="${product.name}" style="max-width: 350px; max-height: 350px; object-fit: cover;">
         <div class="card-body">
             <h5 class="card-title">${product.name}</h5>
             <p class="card-text"><c:if

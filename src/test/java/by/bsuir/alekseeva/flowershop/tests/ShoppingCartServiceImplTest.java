@@ -1,69 +1,72 @@
 package by.bsuir.alekseeva.flowershop.tests;
 
-import by.bsuir.alekseeva.flowershop.beans.Item;
-import by.bsuir.alekseeva.flowershop.beans.ShoppingCart;
-import by.bsuir.alekseeva.flowershop.service.CouponService;
-import by.bsuir.alekseeva.flowershop.service.ProductService;
-import by.bsuir.alekseeva.flowershop.service.ShoppingCartService;
-import by.bsuir.alekseeva.flowershop.service.implementations.CouponServiceImpl;
-import by.bsuir.alekseeva.flowershop.service.implementations.ProductServiceImpl;
+import by.bsuir.alekseeva.flowershop.beans.*;
+import by.bsuir.alekseeva.flowershop.dao.CouponDAO;
+import by.bsuir.alekseeva.flowershop.dao.ProductDAO;
+import by.bsuir.alekseeva.flowershop.dao.ShoppingCartDAO;
+import by.bsuir.alekseeva.flowershop.exception.DAOException;
+import by.bsuir.alekseeva.flowershop.exception.ServiceException;
 import by.bsuir.alekseeva.flowershop.service.implementations.ShoppingCartServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class ShoppingCartServiceImplTest {
-    private ShoppingCartService cartService;
+
+    @Mock
+    private ProductDAO productDAO;
+
+    @Mock
+    private CouponDAO couponDAO;
+
+    @Mock
+    private ShoppingCartDAO shoppingCartDAO;
+
+    private ShoppingCartServiceImpl shoppingCartService;
 
     @BeforeEach
     void setUp() {
-        CouponService couponService = new CouponServiceImpl();
-        ProductService productService = new ProductServiceImpl();
-        cartService = new ShoppingCartServiceImpl(productService, couponService);
+        MockitoAnnotations.openMocks(this);
+        shoppingCartService = new ShoppingCartServiceImpl(productDAO, couponDAO, shoppingCartDAO);
     }
 
     @Test
-    void getCartById() {
-        int id = 1;
-        assertNotNull(cartService.getCartByUserId(id));
+    void testGetCartByUserId() throws DAOException, ServiceException {
+        int userId = 1;
+        ShoppingCart expectedCart = new ShoppingCart();
+        User user = new User();
+        user.setId(userId);
+        expectedCart.setUser(user);
+
+        when(shoppingCartDAO.getCartByUserId(userId)).thenReturn(Optional.of(expectedCart));
+
+        Optional<ShoppingCart> actualCart = shoppingCartService.getCartByUserId(userId);
+        assertTrue(actualCart.isPresent());
+        assertEquals(expectedCart, actualCart.get());
     }
 
     @Test
-    void deleteItemFromCart() {
-        int cartId = 1;
-        int itemId = 1;
-        cartService.deleteItemFromCart(cartId, itemId);
-        ShoppingCart cart = cartService.getCartByUserId(1).get();
-        assertEquals(Optional.empty(), cart.getCartItems().stream()
-                .filter(item -> item.getId() == itemId)
-                .findFirst());
+    void testApplyCoupon() throws DAOException, ServiceException {
+        int userId = 1;
+        int couponId = 10;
+        ShoppingCart cart = new ShoppingCart();
+        User user = new User();
+        user.setId(userId);
+        cart.setUser(user);
+        Coupon coupon = new Coupon(couponId, 123, "Coupon", 0.5f);
+        when(shoppingCartDAO.getCartByUserId(userId)).thenReturn(Optional.of(cart));
+        when(couponDAO.getCouponById(couponId)).thenReturn(Optional.of(coupon));
+
+        shoppingCartService.applyCoupon(userId, couponId);
+
+        assertEquals(coupon, cart.getCoupon());
+        verify(shoppingCartDAO, times(1)).update(cart);
     }
 
-    @Test
-    void updateItemInCart() {
-        int cartId = 1;
-        int itemId = 1;
-        int quantity = 10;
-        cartService.updateItemQuantity(cartId, itemId, quantity);
-        Item cartItem = cartService.getCartByUserId(1).get().getCartItems().stream()
-                .filter(item -> item.getId() == itemId)
-                .findFirst().get();
-        cartItem.setQuantity(quantity);
-        ShoppingCart cart = cartService.getCartByUserId(1).get();
-        assertEquals(quantity, cart.getCartItems().stream()
-                .filter(item -> item.getId() == itemId)
-                .findFirst().get().getQuantity());
-    }
-
-    @Test
-    void clearCart() {
-        int id = 1;
-        cartService.clearCart(id);
-        ShoppingCart cart = cartService.getCartByUserId(id).get();
-        assertEquals(0, cart.getCartItems().size());
-    }
 }

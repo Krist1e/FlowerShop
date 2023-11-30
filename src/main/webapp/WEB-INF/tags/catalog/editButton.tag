@@ -51,7 +51,7 @@
                                    value="${product.discount}" pattern="^0(\.\d+)?$|^1$" step="0.01">
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                             <button type="submit" class="btn btn-primary">Сохранить</button>
                         </div>
                     </form>

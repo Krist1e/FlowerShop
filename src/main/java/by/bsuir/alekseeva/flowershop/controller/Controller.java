@@ -8,7 +8,6 @@ import by.bsuir.alekseeva.flowershop.dao.connection.ConnectionPool;
 import by.bsuir.alekseeva.flowershop.exception.CommandException;
 import by.bsuir.alekseeva.flowershop.exception.CommandFactoryException;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 @Slf4j
-@WebServlet(name = "Controller", value = "/controller")
 public class Controller extends HttpServlet {
 
     private final transient CommandFactory commandFactory = CommandFactory.getInstance();

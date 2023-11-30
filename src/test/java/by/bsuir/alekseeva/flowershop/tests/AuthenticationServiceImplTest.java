@@ -1,27 +1,86 @@
 package by.bsuir.alekseeva.flowershop.tests;
 
-import by.bsuir.alekseeva.flowershop.service.*;
-import by.bsuir.alekseeva.flowershop.service.implementations.*;
+import by.bsuir.alekseeva.flowershop.beans.User;
+import by.bsuir.alekseeva.flowershop.exception.ServiceException;
+import by.bsuir.alekseeva.flowershop.service.AuthenticationService;
+import by.bsuir.alekseeva.flowershop.service.UserService;
+import by.bsuir.alekseeva.flowershop.service.implementations.AuthenticationServiceImpl;
+import com.google.common.hash.Hashing;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
-class AuthenticationServiceImplTest {
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+public class AuthenticationServiceImplTest {
+
     private AuthenticationService authenticationService;
+    private UserService userService;
 
     @BeforeEach
-    void setUp() {
-        UserService userService = new UserServiceImpl();
+    public void setUp() {
+        userService = mock(UserService.class);
         authenticationService = new AuthenticationServiceImpl(userService);
     }
 
     @Test
-    void registerAndAuthenticate() {
-        String email = "admin2@gmail.com";
-        String username = "admin2";
-        String password = "admin2";
-        assertTrue(authenticationService.register(email, username, password).isSuccess());
-        assertTrue(authenticationService.authenticate(username, password).isSuccess());
+    public void testAuthenticate_Successful() throws ServiceException {
+        String username = "testUser";
+        String password = "testPassword";
+        String hashedPassword = Hashing.sha256().hashString(password, StandardCharsets.UTF_8).toString();
+
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(hashedPassword);
+        when(userService.getUserByUsername(username)).thenReturn(Optional.of(user));
+
+        AuthenticationService.AuthenticationResult result = authenticationService.authenticate(username, password);
+
+        assertTrue(result.isSuccess());
+        assertEquals("success", result.getMessage());
     }
+
+    @Test
+    public void testAuthenticate_WrongPassword() throws ServiceException {
+        String username = "testUser";
+        String password = "testPassword";
+        String hashedPassword = Hashing.sha256().hashString("wrongPassword", StandardCharsets.UTF_8).toString();
+
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(hashedPassword);
+        when(userService.getUserByUsername(username)).thenReturn(Optional.of(user));
+
+        AuthenticationService.AuthenticationResult result = authenticationService.authenticate(username, password);
+
+        assertFalse(result.isSuccess());
+        assertEquals("wrong_password", result.getMessage());
+    }
+
+    @Test
+    void testRegister_Success() throws ServiceException {
+        String username = "newUser";
+        String email = "newUser@example.com";
+        String password = "testPassword";
+
+        when(userService.getUserByUsername(username)).thenReturn(Optional.empty());
+
+        assertEquals(authenticationService.register(email, username, password).getMessage(), "success");
+    }
+
+    @Test
+    void testRegister_UserAlreadyExists() throws ServiceException {
+        String username = "existingUser";
+        String email = "existingUser@example.com";
+        String password = "testPassword";
+
+        when(userService.getUserByUsername(username)).thenReturn(Optional.of(new User()));
+
+        assertEquals(authenticationService.register(email, username, password).getMessage(), "user_already_exists");
+    }
+
 }
